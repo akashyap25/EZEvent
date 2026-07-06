@@ -22,3 +22,7 @@ logs/
 .DS_Store
 .vscode/
 .idea/
+
+# Project docs / deployment guides
+DEPLOYMENT_GUIDE.md
+backend/eazy_event_server-master/docs/
