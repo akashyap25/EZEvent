@@ -1,0 +1,15 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#705CF7"/>
+  
+  <!-- Calendar -->
+  <rect x="40" y="50" width="120" height="110" fill="white" stroke="#5c49D9" stroke-width="5" rx="10"/>
+  <rect x="50" y="60" width="20" height="20" fill="#5c49D9"/>
+  <rect x="130" y="60" width="20" height="20" fill="#5c49D9"/>
+  <line x1="40" y1="80" x2="160" y2="80" stroke="#5c49D9" stroke-width="5"/>
+  
+  <!-- Checkmark -->
+  <polyline points="70,110 90,130 130,90" fill="none" stroke="#705CF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  
+
+</svg>

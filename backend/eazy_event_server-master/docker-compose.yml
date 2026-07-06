@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: eazy_event_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: eazy_event
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: eazy_event_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      target: development
+    container_name: eazy_event_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://admin:password123@mongodb:27017/eazy_event?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - CLIENT_BASE_URL=http://localhost:5173
+      - JWT_SECRET=dev-jwt-secret-change-in-production-minimum-64-chars-long-key
+      - SESSION_SECRET=dev-session-secret-change-in-production-32-chars
+      - CSRF_SECRET=dev-csrf-secret-change-in-production-32-chars
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  # Frontend (Development)
+  frontend:
+    build:
+      context: ../frontend/Eazy_Event-main
+      target: development
+    container_name: eazy_event_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_SERVER_URL=http://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend/Eazy_Event-main:/app
+      - /app/node_modules
+
+volumes:
+  mongodb_data:
