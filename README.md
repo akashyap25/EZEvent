@@ -14,7 +14,7 @@ cd backend/eazy_event_server-master
 cp .env.example .env.development
 # Edit .env.development → fill MONGO_URI, SMTP_*, JWT_SECRET, etc.
 npm install
-npm run seed        # Seeds demo data (admin@demo.com / Demo@123!)
+npm run seed        # Seeds demo data for local testing
 npm run dev         # Starts on http://localhost:5000
 
 # 2. Frontend (new terminal)
@@ -25,7 +25,7 @@ npm run dev         # Starts on http://localhost:5174
 
 # 3. Verify
 # Open http://localhost:5174
-# Login: admin@demo.com / Demo@123!
+# Use the demo credentials created by the seed script if enabled locally
 ```
 
 ---
@@ -89,7 +89,7 @@ npm run migrate:status
 | Build time | ~15s |
 | npm vulnerabilities | 0 |
 | CI/CD gates | 5 sequential |
-| Demo accounts | admin@demo.com / Demo@123! |
+| Demo accounts | Created locally by the seed script when enabled |
 
 ---
 
