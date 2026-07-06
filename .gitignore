@@ -47,5 +47,6 @@ temp/
 .idea/
 
 # Project docs / deployment guides
+# Keep these locally on dev only; do not include them in master.
 DEPLOYMENT_GUIDE.md
 backend/eazy_event_server-master/docs/
