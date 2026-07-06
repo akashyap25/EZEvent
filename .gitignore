@@ -23,6 +23,13 @@ coverage/
 .nyc_output/
 .vite/
 .cache/
+.eslintcache
+.parcel-cache
+.next/
+.nuxt/
+.svelte-kit/
+.turbo/
+.pnpm-store/
 *.tsbuildinfo
 *.local
 tmp/
