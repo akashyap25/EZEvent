@@ -18,6 +18,22 @@ backend/**/dist/
 *.log
 logs/
 
+# Local runtime / cache artifacts
+coverage/
+.nyc_output/
+.vite/
+.cache/
+*.tsbuildinfo
+*.local
+tmp/
+temp/
+
+# Secrets and certificates
+*.pem
+*.key
+*.crt
+*.p12
+
 # OS/editor files
 .DS_Store
 .vscode/
