@@ -61,7 +61,6 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "twilio": "^5.9.0",
-    "uuid": "^13.0.0",
     "web-push": "^3.6.7",
     "winston": "^3.13.1",
     "xss": "^1.0.15"
