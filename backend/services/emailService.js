@@ -1,4 +1,9 @@
+const fs = require('fs');
+const path = require('path');
 const communicationConfig = require('../config/communicationConfig');
+
+const LOGO_BASE64 = fs.readFileSync(path.join(__dirname, '../assets/logo.png')).toString('base64');
+const LOGO_IMG_TAG = `<img src="data:image/png;base64,${LOGO_BASE64}" alt="EZEvent" width="40" height="40" style="border-radius: 10px; margin-bottom: 10px;" />`;
 
 class EmailService {
   constructor() {
@@ -6,13 +11,32 @@ class EmailService {
     this.isConfigured = communicationConfig.isEmailConfigured();
   }
 
+  // Generic sender used by the event notification helpers below
+  async sendEmail({ to, subject, html, ...options }) {
+    const mailOptions = {
+      from: `"EZEvent" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to,
+      subject,
+      html,
+      ...options
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   async sendPasswordResetEmail(email, resetToken, firstName) {
     const resetUrl = `${process.env.CLIENT_BASE_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
     
     const mailOptions = {
-      from: `"Eazy Event" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      from: `"EZEvent" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Password Reset Request - Eazy Event',
+      subject: 'Password Reset Request - EZEvent',
       html: `
         <!DOCTYPE html>
         <html>
@@ -23,9 +47,9 @@ class EmailService {
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .header { background: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; background: #3b82f6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
             .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; }
           </style>
@@ -33,12 +57,13 @@ class EmailService {
         <body>
           <div class="container">
             <div class="header">
+              ${LOGO_IMG_TAG}
               <h1>🔐 Password Reset Request</h1>
-              <p>Eazy Event Platform</p>
+              <p>EZEvent</p>
             </div>
             <div class="content">
               <h2>Hello ${firstName || 'User'}!</h2>
-              <p>We received a request to reset your password for your Eazy Event account.</p>
+              <p>We received a request to reset your password for your EZEvent account.</p>
               <p>Click the button below to reset your password:</p>
               <a href="${resetUrl}" class="button">Reset Password</a>
               <div class="warning">
@@ -54,7 +79,7 @@ class EmailService {
               <p style="word-break: break-all; background: #eee; padding: 10px; border-radius: 5px;">${resetUrl}</p>
             </div>
             <div class="footer">
-              <p>This email was sent from Eazy Event Platform</p>
+              <p>This email was sent from EZEvent</p>
               <p>If you have any questions, please contact our support team</p>
             </div>
           </div>
@@ -74,9 +99,9 @@ class EmailService {
 
   async sendPasswordChangedConfirmation(email, firstName) {
     const mailOptions = {
-      from: `"Eazy Event" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      from: `"EZEvent" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Password Changed Successfully - Eazy Event',
+      subject: 'Password Changed Successfully - EZEvent',
       html: `
         <!DOCTYPE html>
         <html>
@@ -96,12 +121,13 @@ class EmailService {
         <body>
           <div class="container">
             <div class="header">
+              ${LOGO_IMG_TAG}
               <h1>✅ Password Changed Successfully</h1>
-              <p>Eazy Event Platform</p>
+              <p>EZEvent</p>
             </div>
             <div class="content">
               <h2>Hello ${firstName || 'User'}!</h2>
-              <p>Your password has been successfully changed for your Eazy Event account.</p>
+              <p>Your password has been successfully changed for your EZEvent account.</p>
               <div class="security-note">
                 <strong>🔒 Security Information:</strong>
                 <ul>
@@ -113,7 +139,7 @@ class EmailService {
               <p>If you have any questions or concerns, please don't hesitate to contact our support team.</p>
             </div>
             <div class="footer">
-              <p>This email was sent from Eazy Event Platform</p>
+              <p>This email was sent from EZEvent</p>
             </div>
           </div>
         </body>
@@ -134,9 +160,9 @@ class EmailService {
     const verificationUrl = `${process.env.CLIENT_BASE_URL || 'http://localhost:5173'}/verify-email?token=${verificationToken}`;
     
     const mailOptions = {
-      from: `"Eazy Event" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      from: `"EZEvent" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Verify Your Email - Eazy Event',
+      subject: 'Verify Your Email - EZEvent',
       html: `
         <!DOCTYPE html>
         <html>
@@ -147,27 +173,28 @@ class EmailService {
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .header { background: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; background: #3b82f6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              ${LOGO_IMG_TAG}
               <h1>📧 Verify Your Email</h1>
-              <p>Eazy Event Platform</p>
+              <p>EZEvent</p>
             </div>
             <div class="content">
               <h2>Welcome ${firstName || 'User'}!</h2>
-              <p>Thank you for registering with Eazy Event. Please verify your email address to complete your registration.</p>
+              <p>Thank you for registering with EZEvent. Please verify your email address to complete your registration.</p>
               <a href="${verificationUrl}" class="button">Verify Email Address</a>
               <p>If the button doesn't work, copy and paste this link into your browser:</p>
               <p style="word-break: break-all; background: #eee; padding: 10px; border-radius: 5px;">${verificationUrl}</p>
             </div>
             <div class="footer">
-              <p>This email was sent from Eazy Event Platform</p>
+              <p>This email was sent from EZEvent</p>
             </div>
           </div>
         </body>

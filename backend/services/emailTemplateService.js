@@ -1,4 +1,9 @@
+const fs = require('fs');
+const path = require('path');
 const communicationConfig = require('../config/communicationConfig');
+
+const LOGO_BASE64 = fs.readFileSync(path.join(__dirname, '../assets/logo.png')).toString('base64');
+
 class EmailTemplateService {
   constructor() {
     this.transporter = communicationConfig.getEmailTransporter();
@@ -17,7 +22,7 @@ class EmailTemplateService {
     try {
       const mailOptions = {
         from: {
-          name: 'Eazy Event',
+          name: 'EZEvent',
           address: process.env.SMTP_USER
         },
         to,
@@ -48,7 +53,7 @@ class EmailTemplateService {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${data.title || 'Eazy Event'}</title>
+        <title>${data.title || 'EZEvent'}</title>
         <style>
           body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -66,10 +71,16 @@ class EmailTemplateService {
             overflow: hidden;
           }
           .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%);
             color: white;
             padding: 30px 20px;
             text-align: center;
+          }
+          .header img {
+            height: 48px;
+            width: 48px;
+            margin-bottom: 12px;
+            border-radius: 12px;
           }
           .header h1 {
             margin: 0;
@@ -81,7 +92,7 @@ class EmailTemplateService {
           }
           .button {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%);
             color: white;
             text-decoration: none;
             padding: 12px 24px;
@@ -117,7 +128,7 @@ class EmailTemplateService {
             font-size: 14px;
           }
           .footer a {
-            color: #667eea;
+            color: #4338ca;
             text-decoration: none;
           }
           .divider {
@@ -163,14 +174,15 @@ class EmailTemplateService {
       <body>
         <div class="container">
           <div class="header">
-            <h1>${data.title || 'Eazy Event'}</h1>
+            <img src="data:image/png;base64,${LOGO_BASE64}" alt="EZEvent" width="48" height="48" />
+            <h1>${data.title || 'EZEvent'}</h1>
             ${data.subtitle ? `<p style="margin: 10px 0 0 0; opacity: 0.9;">${data.subtitle}</p>` : ''}
           </div>
           <div class="content">
             ${data.content || ''}
           </div>
           <div class="footer">
-            <p>This email was sent by <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}">Eazy Event</a></p>
+            <p>This email was sent by <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}">EZEvent</a></p>
             <p>If you no longer wish to receive these emails, you can <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/unsubscribe">unsubscribe</a></p>
           </div>
         </div>

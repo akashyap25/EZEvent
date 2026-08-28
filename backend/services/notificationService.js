@@ -3,8 +3,12 @@
  * Industry-standard service for all communication types (Email, SMS, Push)
  */
 
+const fs = require('fs');
+const path = require('path');
 const communicationConfig = require('../config/communicationConfig');
 const Event = require('../models/event');
+
+const LOGO_BASE64 = fs.readFileSync(path.join(__dirname, '../assets/logo.png')).toString('base64');
 
 class NotificationService {
   constructor() {
@@ -202,11 +206,11 @@ class NotificationService {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Eazy Event Notification</title>
+        <title>EZEvent Notification</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .header { background: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
           .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
           .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
         </style>
@@ -214,13 +218,14 @@ class NotificationService {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎉 Eazy Event</h1>
+            <img src="data:image/png;base64,${LOGO_BASE64}" alt="EZEvent" width="40" height="40" style="border-radius: 10px; margin-bottom: 10px;" />
+            <h1>🎉 EZEvent</h1>
           </div>
           <div class="content">
-            ${data.message || 'You have a new notification from Eazy Event.'}
+            ${data.message || 'You have a new notification from EZEvent.'}
           </div>
           <div class="footer">
-            <p>This email was sent from Eazy Event Platform</p>
+            <p>This email was sent from EZEvent</p>
           </div>
         </div>
       </body>
