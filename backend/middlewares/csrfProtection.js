@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const { securityConfig } = require('../config/security');
 
 // CSRF protection middleware
 const csrfProtection = (req, res, next) => {

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { X, Calendar, MapPin, Clock, User, CreditCard, Download, QrCode } from 'lucide-react';
-import { SERVER_URL } from '../../Utils/Constants';
+import { useState } from 'react';
+import { X, Calendar, MapPin, Clock, Download } from 'lucide-react';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
 
@@ -15,7 +14,9 @@ const TicketModal = ({ ticket, event, isOpen, onClose }) => {
     // Use backend QR endpoint if available, fallback to external service
     if (qrCodeUrl) return qrCodeUrl;
     const qrData = `Event: ${event.title}\nOrder: ${ticket.orderId}\nDate: ${new Date(event.startDateTime).toLocaleDateString()}`;
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    setQrCodeUrl(url);
+    return url;
   };
 
   const handleDownloadPDF = () => {

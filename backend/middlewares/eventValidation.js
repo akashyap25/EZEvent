@@ -47,6 +47,7 @@ const eventValidations = {
       .withMessage('Category must be a valid MongoDB ObjectId'),
     
     body('tags')
+      .optional()
       .isArray({ min: 0, max: 10 })
       .withMessage('Tags must be an array with 0-10 items'),
     

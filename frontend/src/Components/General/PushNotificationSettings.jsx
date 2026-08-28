@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Bell, 
   BellOff, 
-  Settings, 
   TestTube, 
   CheckCircle, 
   XCircle,
   AlertCircle,
-  Smartphone,
   Wifi,
   WifiOff
 } from 'lucide-react';
@@ -191,7 +189,7 @@ const PushNotificationSettings = ({ onClose }) => {
               </p>
               {!isSupported && (
                 <p className="text-xs text-gray-500 mt-1">
-                  Your browser doesn't support push notifications
+                  Your browser doesn&apos;t support push notifications
                 </p>
               )}
             </div>
@@ -269,8 +267,8 @@ const PushNotificationSettings = ({ onClose }) => {
                   Push notifications are blocked in your browser. To enable them:
                 </p>
                 <ol className="text-red-700 text-sm list-decimal list-inside space-y-1">
-                  <li>Click the lock icon in your browser's address bar</li>
-                  <li>Select "Allow" for notifications</li>
+                  <li>Click the lock icon in your browser&apos;s address bar</li>
+                  <li>Select &quot;Allow&quot; for notifications</li>
                   <li>Refresh this page and try again</li>
                 </ol>
               </div>

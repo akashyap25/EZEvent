@@ -70,8 +70,8 @@ const Input = forwardRef(({
         )}
         
         {rightIcon && type !== 'password' && (
-          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400">
-            {rightIcon}
+          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400">
+            <div className="pointer-events-auto">{rightIcon}</div>
           </div>
         )}
       </div>

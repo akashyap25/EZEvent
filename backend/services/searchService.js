@@ -23,7 +23,7 @@ class SearchService {
       sortBy = 'relevance',
       page = 1,
       limit = 20,
-      userId // For personalized results
+      _userId // For personalized results (not yet implemented)
     } = options;
 
     const matchStage = {

@@ -42,7 +42,7 @@ const upload = multer({
 });
 
 // Single file upload middleware
-const uploadSingle = (fieldName, allowedTypes = ['image/jpeg', 'image/png', 'image/gif']) => {
+const uploadSingle = (fieldName) => {
   return (req, res, next) => {
     const uploadHandler = upload.single(fieldName);
     

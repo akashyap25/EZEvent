@@ -185,7 +185,7 @@ class EmailService {
   }
 
   // Event registration confirmation to attendee
-  async sendEventRegistrationEmail(to, { firstName, eventTitle, eventDate, eventLocation, eventId }) {
+  async sendEventRegistrationEmail(to, { firstName, eventTitle, eventDate, eventLocation }) {
     const dateStr = eventDate ? new Date(eventDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'TBD';
     return this.sendEmail({
       to,

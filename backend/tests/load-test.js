@@ -56,7 +56,7 @@ async function makeRequest(method, path, body, headers = {}) {
 }
 
 // Scenario: Typical user browsing flow
-async function userScenario(userId) {
+async function userScenario(_userId) {
   while (running) {
     // 1. View homepage (events list)
     await makeRequest('GET', '/api/events');
@@ -81,7 +81,7 @@ async function userScenario(userId) {
 }
 
 // Scenario: Authenticated user
-async function authUserScenario(userId) {
+async function authUserScenario(_userId) {
   // Login first
   const loginRes = await fetch(`${BASE}/api/users/login`, {
     method: 'POST',

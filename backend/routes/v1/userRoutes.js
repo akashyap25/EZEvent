@@ -11,14 +11,14 @@ const User = require('../../models/user');
 const Token = require('../../models/Token');
 const PasswordReset = require('../../models/PasswordReset');
 const EmailService = require('../../services/emailService');
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 const { 
   generateTokenPair, 
   refreshAccessToken, 
   logout, 
   logoutAllDevices 
 } = require('../../middlewares/secureAuth');
-const { csrfProtection, getCSRFToken } = require('../../middlewares/csrfProtection');
+const { getCSRFToken } = require('../../middlewares/csrfProtection');
 
 const router = express.Router();
 
@@ -378,7 +378,6 @@ router.get('/me', authenticateToken, requireAuth, (req, res) => {
 router.put('/:id/password', 
   authenticateToken, 
   requireAuth, 
-  csrfProtection, 
   commonValidations.mongoId('id'),
   validatePasswordChange, 
   handleValidationErrors,

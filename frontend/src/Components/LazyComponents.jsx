@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import LoadingSpinner from '../Components/LoadingSpinner';
 
 // Lazy load all major components
@@ -16,12 +16,15 @@ export const LazySignin = lazy(() => import('../Components/auth/Sign-in'));
 export const LazyRegisterForm = lazy(() => import('../Components/auth/RegisterForm'));
 
 // Higher-order component for lazy loading with error boundary
+// eslint-disable-next-line react-refresh/only-export-components
 export const withLazyLoading = (Component, fallback = <LoadingSpinner size="lg" text="Loading..." />) => {
-  return (props) => (
+  const WithLazyLoading = (props) => (
     <Suspense fallback={fallback}>
       <Component {...props} />
     </Suspense>
   );
+  WithLazyLoading.displayName = `WithLazyLoading(${Component.displayName || Component.name || 'Component'})`;
+  return WithLazyLoading;
 };
 
 // Pre-configured lazy components with loading states

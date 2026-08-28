@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   HelpCircle, 
   MessageSquare, 
@@ -12,8 +12,7 @@ import {
   AlertCircle,
   Plus,
   ThumbsUp,
-  ThumbsDown,
-  Filter
+  ThumbsDown
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { SERVER_URL } from '../Utils/Constants';
@@ -23,7 +22,7 @@ import Input from '../Components/UI/Input';
 import LoadingSpinner from '../Components/UI/LoadingSpinner';
 
 const Support = () => {
-  const { user, accessToken, isAuthenticated } = useAuth();
+  const { accessToken, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('faqs');
   const [faqs, setFaqs] = useState([]);
   const [tickets, setTickets] = useState([]);
@@ -47,6 +46,7 @@ const Support = () => {
     if (isAuthenticated) {
       fetchTickets();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const fetchFaqs = async () => {

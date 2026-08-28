@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Calendar, 
   Download, 
@@ -22,6 +22,7 @@ const CalendarExport = ({ event, onClose }) => {
     if (event) {
       fetchExportOptions();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
 
   const fetchExportOptions = async () => {

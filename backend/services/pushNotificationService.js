@@ -1,5 +1,5 @@
 const webpush = require('web-push');
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 class PushNotificationService {
   constructor() {

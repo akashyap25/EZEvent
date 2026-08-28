@@ -1,8 +1,9 @@
 const express = require('express');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { handleValidationErrors, commonValidations } = require("../utils/validationUtils");
-const { body, param } = require('express-validator');
+const { body } = require('express-validator');
 const EventTemplateService = require('../services/eventTemplateService');
+const EventTemplate = require('../models/eventTemplate');
 
 const router = express.Router();
 

@@ -9,8 +9,7 @@ const { handleValidationErrors, commonValidations } = require("../utils/validati
 const notificationService = require('../services/notificationService');
 const communicationConfig = require('../config/communicationConfig');
 const Event = require('../models/event');
-const { User } = require('../models/user');
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 const router = express.Router();
 

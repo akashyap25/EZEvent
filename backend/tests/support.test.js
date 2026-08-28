@@ -11,10 +11,9 @@ process.env.NODE_ENV = 'test';
 
 const User = require('../models/user');
 const SupportTicket = require('../models/supportTicket');
-const FAQ = require('../models/faq');
 
 describe('Support API', () => {
-  let app, authToken, userId;
+  let app, authToken;
 
   beforeAll(async () => {
     if (mongoose.connection.readyState === 0) {
@@ -32,7 +31,6 @@ describe('Support API', () => {
       username: 'supportuser', firstName: 'Support', lastName: 'Tester'
     });
     authToken = reg.body.accessToken;
-    userId = reg.body.user._id;
   });
 
   afterAll(async () => {

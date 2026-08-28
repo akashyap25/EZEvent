@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import apiService from '../../Utils/apiService';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import GetUser from '../../Utils/GetUser';
 import * as Yup from 'yup';
-import { SERVER_URL } from '../../Utils/Constants';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
@@ -14,9 +13,7 @@ import {
   Calendar, 
   MapPin, 
   DollarSign, 
-  Users, 
-  Tag, 
-  Image as ImageIcon,
+  Tag,
   Link as LinkIcon,
   CheckCircle,
   ArrowRight,
@@ -24,17 +21,11 @@ import {
   Upload,
   X as CloseIcon,
   Plus,
-  AlertCircle,
   Info,
-  Clock,
-  Globe,
-  User,
   Settings,
   Eye,
   Save,
   Repeat,
-  BarChart3,
-  Download,
   UserPlus
 } from 'lucide-react';
 import RecurringEventForm from './RecurringEventForm';
@@ -140,7 +131,6 @@ const CreateEvent = ({ editEventId } = {}) => {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   
   // New feature states
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [recurringData, setRecurringData] = useState({
     isRecurring: false,
     type: 'weekly',
@@ -150,8 +140,7 @@ const CreateEvent = ({ editEventId } = {}) => {
     endDate: '',
     occurrences: 10
   });
-  const [coOrganizers, setCoOrganizers] = useState([]);
-  const [showTemplates, setShowTemplates] = useState(false);
+  const [coOrganizers] = useState([]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -208,6 +197,7 @@ const CreateEvent = ({ editEventId } = {}) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?._id]);
 
   // Cleanup effect for object URLs
@@ -449,7 +439,7 @@ const CreateEvent = ({ editEventId } = {}) => {
         {/* Progress Bar - items-start keeps all steps aligned to top */}
         <div className="mb-8">
           <div className="flex items-start justify-between gap-2">
-            {STEPS.map((step, index) => {
+            {STEPS.map((step, _index) => {
               const isActive = currentStep === step.id;
               const isCompleted = currentStep > step.id;
               const StepIcon = step.icon;
@@ -633,7 +623,7 @@ const BasicInfoStep = ({ formData, errors, categories, onInputChange }) => {
       <div className="text-center mb-6">
         <Info className="w-12 h-12 text-blue-500 mx-auto mb-3" />
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Basic Information</h2>
-        <p className="text-gray-600 dark:text-gray-400">Let's start with the essential details about your event</p>
+        <p className="text-gray-600 dark:text-gray-400">Let&apos;s start with the essential details about your event</p>
       </div>
 
       <div className="space-y-6">
@@ -1022,7 +1012,7 @@ const AdditionalSettingsStep = ({ formData, errors, onInputChange, onAddTag, onR
         )}
         
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Add relevant tags to help people find your event. Examples: "workshop", "networking", "tech"
+          Add relevant tags to help people find your event. Examples: &quot;workshop&quot;, &quot;networking&quot;, &quot;tech&quot;
         </p>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Share2, 
   Facebook, 
@@ -47,6 +47,7 @@ const SocialShare = ({ event, onClose }) => {
     if (event) {
       loadShareData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
 
   const loadShareData = async () => {

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 // Import models
@@ -330,14 +329,11 @@ async function seedDatabase() {
     }
     await Task.insertMany(tasks);
     // Create FAQs
-    const createdFAQs = await FAQ.insertMany(faqs.map((faq, index) => ({
+    await FAQ.insertMany(faqs.map((faq, index) => ({
       ...faq,
       order: index,
       createdBy: createdUsers[0]._id
     })));
-    demoUsers.forEach(user => {
-      });
-    
   } catch (error) {
     console.error('Error seeding database:', error);
   } finally {

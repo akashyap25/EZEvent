@@ -63,7 +63,7 @@ services:
   # Frontend (Development)
   frontend:
     build:
-      context: ../frontend/Eazy_Event-main
+      context: ../frontend
       target: development
     container_name: eazy_event_frontend
     restart: unless-stopped
@@ -74,7 +74,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ../frontend/Eazy_Event-main:/app
+      - ../frontend:/app
       - /app/node_modules
 
 volumes:

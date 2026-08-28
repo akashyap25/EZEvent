@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from '../Utils/Constants';
@@ -32,6 +32,7 @@ const VerifyAccount = () => {
     if (email) {
       sendOTP();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sendOTP = async (resend = false) => {
@@ -186,7 +187,7 @@ const VerifyAccount = () => {
 
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Didn't receive the code?{' '}
+              Didn&apos;t receive the code?{' '}
               {resendTimer > 0 ? (
                 <span className="text-gray-500">Resend in {resendTimer}s</span>
               ) : (

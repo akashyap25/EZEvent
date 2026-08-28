@@ -135,7 +135,6 @@ const warmCache = async (req, res, next) => {
     // Warm up frequently accessed data
     if (req.originalUrl === '/api/events' && req.method === 'GET') {
       // Pre-warm events cache
-      const { category, status, page = 1, limit = 10 } = req.query;
       const cacheKey = cacheKeyGenerators.getEvents(req);
       
       // Check if cache exists, if not, let the request proceed normally

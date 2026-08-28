@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState, useRef, useEffect } from 'react';
 import apiService from '../../Utils/apiService';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
-import { Camera, CheckCircle, XCircle, QrCode, Loader } from 'lucide-react';
+import { Camera, CheckCircle, XCircle, QrCode } from 'lucide-react';
 
 /**
  * QR Scanner for event check-in
@@ -11,7 +10,6 @@ import { Camera, CheckCircle, XCircle, QrCode, Loader } from 'lucide-react';
  * Falls back to manual email check-in if camera is unavailable
  */
 const QRScanner = ({ eventId, onCheckIn }) => {
-  const { user } = useAuth();
   const [scanning, setScanning] = useState(false);
   const [result, setResult] = useState(null); // { success, message }
   const [manualEmail, setManualEmail] = useState('');

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { SERVER_URL } from '../../Utils/Constants';
 import apiService from '../../Utils/apiService';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
@@ -12,28 +11,21 @@ import {
   AlertCircle, 
   User, 
   Calendar,
-  Filter,
   Search,
   Plus,
   Eye,
-  Edit,
-  Trash2,
   ArrowLeft,
   MoreVertical,
   CheckSquare,
   Square,
   TrendingUp,
   Target,
-  Users,
   Bell,
   Star,
   Archive,
   RefreshCw,
   Download,
-  Upload,
   Settings,
-  BarChart3,
-  PieChart,
   List,
   Grid3X3
 } from 'lucide-react';
@@ -107,12 +99,13 @@ const AllTasks = () => {
       let comparison = 0;
       
       switch (sortBy) {
-        case 'priority':
+        case 'priority': {
           const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
           const aPriority = priorityOrder[a.priority] || 0;
           const bPriority = priorityOrder[b.priority] || 0;
           comparison = aPriority - bPriority;
           break;
+        }
         case 'title':
           comparison = a.title.localeCompare(b.title);
           break;

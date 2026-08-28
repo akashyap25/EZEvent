@@ -120,7 +120,7 @@ const AssignedTask = () => {
         }
       >
         <p className="text-gray-600 dark:text-gray-400">
-          Mark "<strong className="text-gray-900 dark:text-white">{selectedTask?.title}</strong>" as completed?
+          Mark &quot;<strong className="text-gray-900 dark:text-white">{selectedTask?.title}</strong>&quot; as completed?
         </p>
       </Dialog>
     </section>

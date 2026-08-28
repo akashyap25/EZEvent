@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import apiService, { eventApi } from '../Utils/apiService';
 import { 
   Calendar, 
-  MapPin, 
-  Clock, 
   Users, 
   Star, 
-  ArrowRight, 
-  Search as SearchIcon, 
-  Filter,
-  TrendingUp,
+  ArrowRight,
   Shield,
-  Zap,
-  Heart,
-  ChevronRight,
-  Play,
-  CheckCircle
+  Zap
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { extractApiArray } from '../Utils/apiUtils';
@@ -25,7 +15,6 @@ import SearchComponent from './General/Search';
 import CategoryFilter from './General/CategoryFilter';
 import Card from './UI/Card';
 import Button from './UI/Button';
-import LoadingSpinner from './UI/LoadingSpinner';
 import { EventGridSkeleton } from './UI/Skeleton';
 import HeroSection from './Sections/HeroSection';
 
@@ -137,7 +126,7 @@ const Home = () => {
     }
     
     setFilteredEvents(allEvents);
-  }, [events, window.location.search]);
+  }, [events]);
 
   const features = [
     {
@@ -321,7 +310,7 @@ const Home = () => {
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 italic">"{testimonial.content}"</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 italic">&quot;{testimonial.content}&quot;</p>
                 <div>
                   <div className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</div>

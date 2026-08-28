@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiService from '../../Utils/apiService';
-import { SERVER_URL } from '../../Utils/Constants';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,25 +13,17 @@ import {
   ArrowLeft,
   Plus,
   Target,
-  Users,
   Calendar,
   Clock,
   CheckCircle,
   AlertCircle,
   Edit,
   Trash2,
-  MoreVertical,
   Search,
-  Filter,
-  SortAsc,
-  SortDesc,
   RefreshCw,
   User,
   Bell,
   Star,
-  Eye,
-  Settings,
-  BarChart3,
   List,
   Grid3X3,
   CheckSquare,
@@ -157,12 +148,13 @@ const Task = () => {
       let comparison = 0;
       
       switch (sortBy) {
-        case 'priority':
+        case 'priority': {
           const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
           const aPriority = priorityOrder[a.priority] || 0;
           const bPriority = priorityOrder[b.priority] || 0;
           comparison = aPriority - bPriority;
           break;
+        }
         case 'title':
           comparison = a.title.localeCompare(b.title);
           break;

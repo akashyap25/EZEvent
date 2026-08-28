@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/event');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
-const { commonValidations, handleValidationErrors } = require('../utils/validationUtils');
 
 // ==================== POLLS & Q&A ====================
 

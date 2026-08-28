@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, Repeat, X as CloseIcon } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Repeat, X as CloseIcon } from 'lucide-react';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
 

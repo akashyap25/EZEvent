@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Calendar, Search, Users, Ticket, Star, ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { Search, Ticket, Star, Sparkles, Zap } from 'lucide-react';
 
 const Onboarding = () => {
   const [show, setShow] = useState(false);
@@ -144,7 +144,7 @@ const Onboarding = () => {
                   className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
                   style={{ color: currentStep.color, background: `${currentStep.color}10` }}
                 >
-                  Let's go →
+                  Let&apos;s go →
                 </button>
               ) : (
                 <button

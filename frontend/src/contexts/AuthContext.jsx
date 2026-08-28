@@ -4,6 +4,7 @@ import { SERVER_URL } from '../Utils/Constants';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -165,6 +166,7 @@ export const AuthProvider = ({ children }) => {
       getCurrentUser();
     }
     // Don't set loading=false here — the mount effect handles the "no token" case
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   // Periodic token validation
@@ -182,6 +184,7 @@ export const AuthProvider = ({ children }) => {
     const interval = setInterval(validateTokenPeriodically, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   // Add axios response interceptor to handle 401 errors globally
@@ -206,6 +209,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshToken]);
 
   // Check if token is valid

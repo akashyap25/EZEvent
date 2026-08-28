@@ -5,17 +5,17 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend/eazy_event_server-master
+      context: ./backend
       target: development
     ports:
       - "5000:5000"
     env_file:
-      - ./backend/eazy_event_server-master/.env.development
+      - ./backend/.env.development
     environment:
       - MONGO_URI=mongodb://mongo:27017/eazy_event_dev
       - REDIS_URL=redis://redis:6379
     volumes:
-      - ./backend/eazy_event_server-master:/app
+      - ./backend:/app
       - /app/node_modules
     depends_on:
       - mongo
@@ -25,14 +25,14 @@ services:
 
   frontend:
     build:
-      context: ./frontend/Eazy_Event-main
+      context: ./frontend
       target: development
     ports:
       - "5174:5174"
     environment:
       - VITE_SERVER_URL=http://localhost:5000
     volumes:
-      - ./frontend/Eazy_Event-main:/app
+      - ./frontend:/app
       - /app/node_modules
     depends_on:
       - backend

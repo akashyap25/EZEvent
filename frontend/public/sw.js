@@ -73,8 +73,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy: API responses — Stale-while-revalidate
-  if (url.pathname.startsWith('/api/')) {
+  // Strategy: API responses — Stale-while-revalidate (only for known-cacheable, non-sensitive paths)
+  if (CACHEABLE_API.some((path) => url.pathname.startsWith(path))) {
     event.respondWith(staleWhileRevalidate(request, API_CACHE));
     return;
   }

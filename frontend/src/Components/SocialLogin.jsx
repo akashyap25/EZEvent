@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { FaGithub, FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 import { SERVER_URL } from '../Utils/Constants';
 
 const SocialLogin = ({ mode = 'login' }) => {

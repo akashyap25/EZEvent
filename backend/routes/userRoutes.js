@@ -1,19 +1,18 @@
 const express = require('express');
-const { createUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
-const { authenticateToken, requireAuth, optionalAuth } = require('../middlewares/authMiddleware');
+const { getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { 
   generateTokenPair, 
   refreshAccessToken, 
   logout, 
   logoutAllDevices 
 } = require('../middlewares/secureAuth');
-const { csrfProtection, getCSRFToken } = require('../middlewares/csrfProtection');
+const { getCSRFToken } = require('../middlewares/csrfProtection');
 const { 
   authRateLimit, 
   passwordResetRateLimit, 
   accountLockoutRateLimit 
 } = require('../middlewares/rateLimiting');
-const { validatePassword } = require('../config/security');
 const User = require('../models/user');
 const Token = require('../models/Token');
 const PasswordReset = require('../models/PasswordReset');
@@ -33,17 +32,6 @@ const validatePasswordChange = validationSets.passwordChange;
 
 const validatePasswordReset = [
   body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email')
-];
-
-const validatePasswordResetConfirm = [
-  body('token').notEmpty().withMessage('Reset token is required'),
-  body('newPassword').custom((value) => {
-    const validation = validatePassword(value);
-    if (!validation.isValid) {
-      throw new Error(validation.errors.join(', '));
-    }
-    return true;
-  })
 ];
 
 // Public routes
@@ -653,7 +641,6 @@ router.get('/me', authenticateToken, requireAuth, (req, res) => {
 router.put('/:id/password', 
   authenticateToken, 
   requireAuth, 
-  csrfProtection, 
   commonValidations.mongoId('id'),
   validatePasswordChange, 
   handleValidationErrors,

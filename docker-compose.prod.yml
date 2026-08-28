@@ -5,12 +5,12 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend/eazy_event_server-master
+      context: ./backend
       target: production
     ports:
       - "5000:5000"
     env_file:
-      - ./backend/eazy_event_server-master/.env.production
+      - ./backend/.env.production
     environment:
       - NODE_ENV=production
     restart: always
@@ -28,7 +28,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend/Eazy_Event-main
+      context: ./frontend
       target: production
     ports:
       - "80:80"

@@ -2,15 +2,16 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint . --ext js --report-unused-disable-directives --max-warnings 0",
     "seed": "node scripts/seedDemoData.js",
     "prod:check": "node scripts/prodReadinessCheck.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit --runInBand",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch",
-    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage --forceExit",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage --forceExit --runInBand",
     "test:integration": "node tests/integration-runner.js",
     "migrate:up": "npx migrate-mongo up",
     "migrate:down": "npx migrate-mongo down",
@@ -42,21 +43,15 @@
     "ical-generator": "^9.0.0",
     "ioredis": "^5.7.0",
     "isomorphic-dompurify": "^2.26.0",
-    "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "migrate-mongo": "^14.0.7",
-    "mongodb": "^6.8.0",
     "mongoose": "^8.2.0",
     "multer": "^2.0.2",
-    "node-cache": "^5.1.2",
     "nodemailer": "^9.0.3",
     "nodemon": "^3.1.0",
     "passport": "^0.7.0",
-    "passport-facebook": "^3.0.0",
     "passport-github": "^1.1.0",
     "passport-google-oauth20": "^2.0.0",
-    "passport-linkedin-oauth2": "^2.0.0",
-    "passport-twitter": "^0.1.5",
     "qrcode": "^1.5.4",
     "rate-limit-redis": "^5.0.0",
     "redis": "^5.8.2",
@@ -66,7 +61,6 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "twilio": "^5.9.0",
-    "uuid": "^13.0.0",
     "web-push": "^3.6.7",
     "winston": "^3.13.1",
     "xss": "^1.0.15"
@@ -77,6 +71,8 @@
     "@babel/node": "^7.28.0",
     "@babel/preset-env": "^7.29.7",
     "@types/jest": "^29.5.8",
+    "eslint": "^8.57.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "jest": "^29.7.0",
     "supertest": "^6.3.3"
   },
@@ -117,9 +113,6 @@
     "forceExit": true,
     "clearMocks": true,
     "resetMocks": true,
-    "restoreMocks": true,
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@exodus|html-encoding-sniffer)/)"
-    ]
+    "restoreMocks": true
   }
 }

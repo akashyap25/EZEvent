@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Card from '../UI/Card';
@@ -19,8 +19,6 @@ const RegisterForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   
   const { register } = useAuth();
@@ -51,7 +49,7 @@ const RegisterForm = () => {
       return;
     }
 
-    const { confirmPassword, ...registrationData } = formData;
+    const { confirmPassword: _confirmPassword, ...registrationData } = formData;
     const result = await register(registrationData);
 
     if (result.success) {

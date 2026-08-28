@@ -1,7 +1,7 @@
 const Organization = require('../models/organization');
 const OrganizationMember = require('../models/organizationMember');
 const OrganizationInvite = require('../models/organizationInvite');
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 // Create a new organization
 const createOrganization = async (req, res) => {
@@ -56,6 +56,13 @@ const createOrganization = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'An organization with this name already exists'
+      });
+    }
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: error.message
       });
     }
 

@@ -1,24 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   MessageCircle, 
   Send, 
   Smile, 
-  Paperclip, 
-  MoreVertical, 
-  Users, 
   Settings,
   X,
-  Edit3,
-  Trash2,
-  Reply,
-  Heart,
-  ThumbsUp,
-  ThumbsDown,
-  Laugh,
-  Angry,
-  Frown,
-  Star,
-  AlertCircle
+  AlertCircle,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { SERVER_URL } from '../../Utils/Constants';
@@ -41,6 +30,7 @@ const ChatRoom = ({ eventId, onClose }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
+  const [editText, setEditText] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   
   const messagesEndRef = useRef(null);
@@ -78,12 +68,14 @@ const ChatRoom = ({ eventId, onClose }) => {
         socketRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, accessToken]);
 
   useEffect(() => {
     if (currentRoom && !currentRoom.isFallback) {
       loadMessages();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom?._id]);
 
   useEffect(() => {
@@ -359,6 +351,7 @@ const ChatRoom = ({ eventId, onClose }) => {
     try {
       socket.emit('edit_message', { messageId, newContent });
       setEditingMessage(null);
+      setEditText('');
     } catch (error) {
       setError('Failed to edit message');
     }
@@ -366,6 +359,8 @@ const ChatRoom = ({ eventId, onClose }) => {
 
   const deleteMessage = async (messageId) => {
     if (!socket) return;
+
+    if (!window.confirm('Delete this message?')) return;
 
     try {
       socket.emit('delete_message', { messageId });
@@ -435,7 +430,13 @@ const ChatRoom = ({ eventId, onClose }) => {
           <div className="flex items-center gap-3">
             <MessageCircle className="w-6 h-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Event Chat</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                Event Chat
+                <span
+                  className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`}
+                  title={isConnected ? 'Connected' : 'Disconnected'}
+                />
+              </h2>
               {currentRoom && (
                 <p className="text-sm text-gray-600 dark:text-gray-400">{currentRoom.name}</p>
               )}
@@ -503,7 +504,7 @@ const ChatRoom = ({ eventId, onClose }) => {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-yellow-700">
-                  You're viewing the chat in read-only mode. <a href="/signin" className="font-medium underline text-yellow-700 hover:text-yellow-600">Log in</a> to send messages.
+                  You&apos;re viewing the chat in read-only mode. <a href="/signin" className="font-medium underline text-yellow-700 hover:text-yellow-600">Log in</a> to send messages.
                 </p>
               </div>
             </div>
@@ -569,15 +570,57 @@ const ChatRoom = ({ eventId, onClose }) => {
                             Replying to: {message.replyTo.content}
                           </div>
                         )}
-                        
-                        <div className="whitespace-pre-wrap">{message.content}</div>
-                        
+
+                        {editingMessage === message._id ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' && editText.trim()) editMessage(message._id, editText.trim());
+                                if (e.key === 'Escape') { setEditingMessage(null); setEditText(''); }
+                              }}
+                              className="flex-1 px-2 py-1 rounded text-gray-900 text-sm"
+                              autoFocus
+                            />
+                            <button
+                              onClick={() => editText.trim() && editMessage(message._id, editText.trim())}
+                              className="text-xs underline"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="whitespace-pre-wrap">{message.content}</div>
+                        )}
+
                         {message.isEdited && (
                           <div className="text-xs opacity-75 mt-1">(edited)</div>
                         )}
-                        
-                        <div className="text-xs opacity-75 mt-1">
-                          {formatTime(message.createdAt)}
+
+                        <div className="flex items-center justify-between gap-2 mt-1">
+                          <div className="text-xs opacity-75">
+                            {formatTime(message.createdAt)}
+                          </div>
+                          {isOwnMessage(message) && editingMessage !== message._id && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => { setEditingMessage(message._id); setEditText(message.content); }}
+                                className="opacity-75 hover:opacity-100"
+                                title="Edit message"
+                              >
+                                <Pencil className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={() => deleteMessage(message._id)}
+                                className="opacity-75 hover:opacity-100"
+                                title="Delete message"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                       

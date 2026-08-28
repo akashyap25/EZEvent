@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import apiService from '../Utils/apiService';
 import Card from '../Components/UI/Card';
 import LoadingSpinner from '../Components/UI/LoadingSpinner';
 import { 
   Users, Calendar, ShoppingCart, DollarSign, 
-  Search, Shield, UserX, UserCheck, Download,
-  TrendingUp, AlertCircle
+  Search, Shield, UserX, UserCheck, AlertCircle
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -22,6 +21,7 @@ const AdminDashboard = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchStats(); fetchUsers(); }, []);
 
   const fetchStats = async () => {
@@ -74,23 +74,6 @@ const AdminDashboard = () => {
     } catch (err) {
       setError(err.message || 'Failed to update status');
       setTimeout(() => setError(''), 3000);
-    }
-  };
-
-  const handleExport = async (eventId) => {
-    try {
-      const response = await fetch(`/api/admin/events/${eventId}/export`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
-      });
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `event-${eventId}-attendees.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      setError('Export failed');
     }
   };
 

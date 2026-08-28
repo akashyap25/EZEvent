@@ -1,31 +1,39 @@
 const rateLimit = require('express-rate-limit');
 const { securityConfig } = require('../config/security');
+const logger = require('../utils/logger');
 
-// Redis store for rate limiting (persists across server restarts)
-let redisStore = undefined;
+const getClientKey = (req) => {
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+  return ip.includes(':') ? ip : ip;
+};
+
+// Redis store factory for rate limiting (persists across server restarts)
+let redisStoreFactory = undefined;
 if (process.env.REDIS_URL) {
   try {
     const { RedisStore } = require('rate-limit-redis');
     const { createClient } = require('redis');
     const redisClient = createClient({ url: process.env.REDIS_URL });
     redisClient.connect().catch(() => {});
-    redisStore = new RedisStore({ sendCommand: (...args) => redisClient.sendCommand(args) });
-    console.log('Rate limiter using Redis store (persistent across restarts)');
+    redisStoreFactory = (prefix) => new RedisStore({
+      sendCommand: (...args) => redisClient.sendCommand(args),
+      prefix
+    });
+    logger.info('Rate limiter using Redis store (persistent across restarts)');
   } catch (err) {
-    console.log('Rate limiter using in-memory store (Redis not available)');
+    logger.warn('Rate limiter using in-memory store (Redis not available)');
   }
 } else {
-  console.log('Rate limiter using in-memory store (set REDIS_URL for persistence)');
+  logger.info('Rate limiter using in-memory store (set REDIS_URL for persistence)');
 }
 
 // Authentication rate limiting
 const authRateLimit = rateLimit({
   ...securityConfig.rateLimits.auth,
-  ...(redisStore && { store: redisStore }),
+  ...(redisStoreFactory && { store: redisStoreFactory('auth:') }),
   keyGenerator: (req) => {
-    // Use IP + email for more granular rate limiting on auth endpoints
     const email = req.body?.email || 'unknown';
-    return `${req.ip}-${email}`;
+    return `${getClientKey(req)}-${email}`;
   },
   skip: (req) => {
     // Skip rate limiting for successful requests
@@ -37,16 +45,15 @@ const authRateLimit = rateLimit({
 const passwordResetRateLimit = rateLimit({
   ...securityConfig.rateLimits.passwordReset,
   keyGenerator: (req) => {
-    // Use IP + email for password reset attempts
     const email = req.body?.email || 'unknown';
-    return `${req.ip}-${email}`;
+    return `${getClientKey(req)}-${email}`;
   }
 });
 
 // General API rate limiting
 const generalRateLimit = rateLimit({
   ...securityConfig.rateLimits.general,
-  ...(redisStore && { store: redisStore })
+  ...(redisStoreFactory && { store: redisStoreFactory('general:') })
 });
 
 // Account lockout rate limiting (for failed login attempts)
@@ -61,7 +68,7 @@ const accountLockoutRateLimit = rateLimit({
   },
   keyGenerator: (req) => {
     const email = req.body?.email || 'unknown';
-    return `lockout-${req.ip}-${email}`;
+    return `lockout-${getClientKey(req)}-${email}`;
   },
   skip: (req) => {
     // Skip if user is already authenticated

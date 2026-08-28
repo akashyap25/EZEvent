@@ -44,10 +44,6 @@ class ChatSocket {
 
   setupEventHandlers() {
     this.io.on('connection', (socket) => {
-      if (socket.isAuthenticated && socket.user) {
-        } else {
-        }
-
       // Join event-specific rooms
       socket.on('join_event_rooms', async (eventId) => {
         try {
@@ -55,9 +51,6 @@ class ChatSocket {
           
           for (const room of chatRooms) {
             socket.join(`room_${room._id}`);
-            if (socket.user) {
-              } else {
-              }
           }
         } catch (error) {
           socket.emit('error', { message: error.message });
@@ -68,7 +61,6 @@ class ChatSocket {
       socket.on('join_room', async (payload) => {
         try {
           const roomId = typeof payload === 'object' && payload !== null ? payload.roomId : payload;
-          const displayName = typeof payload === 'object' && payload !== null ? (payload.displayName || 'Guest').trim() : 'Guest';
           if (!roomId) {
             socket.emit('error', { message: 'roomId is required' });
             return;
@@ -111,9 +103,6 @@ class ChatSocket {
       // Leave chat room
       socket.on('leave_room', (roomId) => {
         socket.leave(`room_${roomId}`);
-        if (socket.user) {
-          } else {
-          }
         socket.emit('room_left', { roomId });
       });
 
@@ -280,9 +269,6 @@ class ChatSocket {
 
       // Handle disconnection
       socket.on('disconnect', () => {
-        if (socket.user) {
-          } else {
-          }
       });
     });
   }

@@ -14,7 +14,7 @@ const Event = require('../models/event');
 const Category = require('../models/category');
 
 describe('Waitlist & Templates API', () => {
-  let app, authToken, userId, eventId;
+  let app, authToken, eventId;
 
   beforeAll(async () => {
     if (mongoose.connection.readyState === 0) {
@@ -33,7 +33,6 @@ describe('Waitlist & Templates API', () => {
       username: 'waitlistuser', firstName: 'Wait', lastName: 'Lister'
     });
     authToken = reg.body.accessToken;
-    userId = reg.body.user._id;
 
     const cat = await Category.create({ name: 'Tech' });
     const eventRes = await request(app)
@@ -46,7 +45,7 @@ describe('Waitlist & Templates API', () => {
         category: cat._id, isFree: true, price: '0', location: 'Test',
         capacity: 1
       });
-    eventId = eventRes.body.event?._id || eventRes.body.data?._id;
+    eventId = eventRes.body.eventId || eventRes.body.event?._id || eventRes.body.data?._id;
   });
 
   afterAll(async () => {

@@ -1,5 +1,5 @@
 const Event = require('../models/event');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 class RecurringEventService {
   /**
@@ -18,7 +18,7 @@ class RecurringEventService {
     let currentDate = new Date(startDate);
     let count = 0;
     const maxOccurrences = occurrences || 100; // Default to 100 if not specified
-    const recurringGroupId = uuidv4();
+    const recurringGroupId = randomUUID();
     
     while (count < maxOccurrences) {
       // Check if we've reached the end date
@@ -124,7 +124,7 @@ class RecurringEventService {
         ...eventData,
         isRecurring: true,
         recurringPattern,
-        recurringGroupId: uuidv4()
+        recurringGroupId: randomUUID()
       });
       
       // Generate recurring instances
@@ -165,7 +165,7 @@ class RecurringEventService {
       }
       
       // Remove fields that shouldn't be updated
-      const { eventId, ...updateFields } = updateData;
+      const { eventId: _eventId, ...updateFields } = updateData;
       
       const result = await Event.updateMany(query, updateFields);
       

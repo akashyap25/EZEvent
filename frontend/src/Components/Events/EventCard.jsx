@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, 
   MapPin, 
-  Clock, 
   Users, 
-  Star, 
   Edit, 
   Trash2, 
   Heart,
@@ -23,7 +21,6 @@ import Button from '../UI/Button';
 const EventCard = ({ event, hidePrice, showActions = false, onStatusUpdate }) => {
   const { user: currentUser, isAuthenticated } = useAuth();
   const [isLiked, setIsLiked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const eventOrganizerId = event?.organizer?._id?.toString();
   const isEventCreator = currentUser?._id === eventOrganizerId;
@@ -48,7 +45,6 @@ const EventCard = ({ event, hidePrice, showActions = false, onStatusUpdate }) =>
 
   const isEventLive = new Date(event.startDateTime) <= new Date() && new Date(event.endDateTime) >= new Date();
   const isEventUpcoming = new Date(event.startDateTime) > new Date();
-  const isEventPast = new Date(event.endDateTime) < new Date();
 
   const getEventStatus = () => {
     if (isEventLive) return { text: 'Live', color: 'bg-red-500', textColor: 'text-red-500' };
@@ -88,8 +84,6 @@ const EventCard = ({ event, hidePrice, showActions = false, onStatusUpdate }) =>
   return (
     <Card 
       className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Event Image */}
       <div className="relative h-48 overflow-hidden">

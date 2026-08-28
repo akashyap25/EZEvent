@@ -1,5 +1,5 @@
 const rateLimit = require('express-rate-limit');
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 // User-based rate limiting configuration
 const USER_RATE_LIMITS = {
@@ -128,13 +128,14 @@ const getRateLimitConfig = async (req) => {
 const userRateLimit = async (req, res, next) => {
   try {
     const config = await getRateLimitConfig(req);
+    const { userTier, endpoint, ...rateLimitOptions } = config;
     
     // Create rate limiter with user-specific key
     const userKey = req.auth?.userId || req.ip;
-    const keyGenerator = () => `${userKey}:${config.endpoint}`;
+    const keyGenerator = () => `${userKey}:${endpoint}`;
     
     const limiter = rateLimit({
-      ...config,
+      ...rateLimitOptions,
       keyGenerator: keyGenerator,
       standardHeaders: true,
       legacyHeaders: false,
@@ -144,8 +145,8 @@ const userRateLimit = async (req, res, next) => {
           message: config.message,
           error: {
             code: 'RATE_LIMIT_EXCEEDED',
-            userTier: config.userTier,
-            endpoint: config.endpoint,
+            userTier: userTier,
+            endpoint: endpoint,
             retryAfter: Math.round(config.windowMs / 1000),
             limit: config.max,
             windowMs: config.windowMs
@@ -243,7 +244,7 @@ const adaptiveRateLimit = async (req, res, next) => {
 };
 
 // Get user's recent request history (mock implementation)
-const getUserRecentRequests = async (userId) => {
+const getUserRecentRequests = async (_userId) => {
   // In a real implementation, this would query a database
   // For now, return mock data
   return {

@@ -47,7 +47,7 @@ describe('Tasks API', () => {
         endDateTime: new Date(Date.now() + 90000000).toISOString(),
         category: cat._id, isFree: true, price: '0', location: 'Test'
       });
-    eventId = eventRes.body.event?._id || eventRes.body.data?._id;
+    eventId = eventRes.body.eventId || eventRes.body.event?._id || eventRes.body.data?._id;
   });
 
   afterAll(async () => {
@@ -84,9 +84,9 @@ describe('Tasks API', () => {
         .send({
           title: 'Setup AV Equipment',
           description: 'Set up audio and video for the event',
-          eventId: eventId,
+          event: eventId,
           assignedTo: userId,
-          dueDate: new Date(Date.now() + 86400000).toISOString(),
+          deadline: new Date(Date.now() + 86400000).toISOString(),
           priority: 'high'
         });
       expect([200, 201]).toContain(res.status);

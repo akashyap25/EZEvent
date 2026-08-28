@@ -4,7 +4,6 @@
  */
 
 const communicationConfig = require('../config/communicationConfig');
-const { User } = require('../models/user');
 const Event = require('../models/event');
 
 class NotificationService {
@@ -107,7 +106,7 @@ class NotificationService {
    * Send push notifications
    * @private
    */
-  async sendPushNotifications(recipients, subject, message, results) {
+  async sendPushNotifications(_recipients, _subject, _message, _results) {
     // Implementation for push notifications
     // This would integrate with your push notification service
     }
@@ -144,7 +143,7 @@ class NotificationService {
    * Get event attendees
    * @private
    */
-  async getEventAttendees(eventId) {
+  async getEventAttendees(_eventId) {
     // This would query your database for event attendees
     // Implementation depends on your data model
     return [];
@@ -154,7 +153,7 @@ class NotificationService {
    * Get event notification configuration
    * @private
    */
-  getEventNotificationConfig(type, event, data) {
+  getEventNotificationConfig(type, event, _data) {
     const configs = {
       'event_created': {
         channels: ['email'],

@@ -15,7 +15,7 @@ const Category = require('../models/category');
 const Bookmark = require('../models/bookmark');
 
 describe('Bookmarks API', () => {
-  let app, authToken, userId, eventId, categoryId;
+  let app, authToken, eventId, categoryId;
 
   beforeAll(async () => {
     if (mongoose.connection.readyState === 0) {
@@ -35,7 +35,6 @@ describe('Bookmarks API', () => {
       username: 'bookmarkuser', firstName: 'Bookmark', lastName: 'Tester'
     });
     authToken = reg.body.accessToken;
-    userId = reg.body.user._id;
 
     const cat = await Category.create({ name: 'Tech' });
     categoryId = cat._id;
@@ -51,7 +50,7 @@ describe('Bookmarks API', () => {
         category: categoryId,
         isFree: true, price: '0', location: 'Test'
       });
-    eventId = eventRes.body.event?._id || eventRes.body.data?._id;
+    eventId = eventRes.body.eventId || eventRes.body.event?._id || eventRes.body.data?._id;
   });
 
   afterAll(async () => {

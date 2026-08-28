@@ -1,6 +1,4 @@
 const User = require('../models/user');
-const Event = require('../models/event');
-const Order = require('../models/order');
 
 const createUser = async (req, res) => {
   try {

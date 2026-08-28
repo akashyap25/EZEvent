@@ -161,7 +161,7 @@ const handleApiError = (error, res) => {
 };
 
 // Generic error handler
-const handleError = (error, req, res, next) => {
+const handleError = (error, req, res, _next) => {
   console.error('Unhandled Error:', error);
   
   // Don't leak error details in production

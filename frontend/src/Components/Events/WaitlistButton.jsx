@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import apiService from '../../Utils/apiService';
 import Button from '../UI/Button';
-import { Clock, Users, X, Check } from 'lucide-react';
+import { Clock, Users, X } from 'lucide-react';
 
 const WaitlistButton = ({ event }) => {
   const { user, isAuthenticated } = useAuth();
@@ -17,6 +17,7 @@ const WaitlistButton = ({ event }) => {
     if (isAuthenticated && event?._id && isFull) {
       checkWaitlistStatus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event?._id, isAuthenticated]);
 
   const checkWaitlistStatus = async () => {
@@ -75,9 +76,9 @@ const WaitlistButton = ({ event }) => {
       {onWaitlist ? (
         <div>
           <p className="text-sm text-amber-700 dark:text-amber-400 mb-3">
-            You're on the waitlist at position <strong>#{position}</strong>
+            You&apos;re on the waitlist at position <strong>#{position}</strong>
             {totalWaiting > 0 && ` of ${totalWaiting} waiting`}. 
-            We'll notify you if a spot opens up.
+            We&apos;ll notify you if a spot opens up.
           </p>
           <Button
             onClick={leaveWaitlist}

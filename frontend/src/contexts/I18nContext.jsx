@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const translations = {
   en: {
@@ -73,6 +73,7 @@ const translations = {
 
 const I18nContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTranslation = () => {
   const context = useContext(I18nContext);
   if (!context) return { t: (key) => key, lang: 'en', setLang: () => {} };

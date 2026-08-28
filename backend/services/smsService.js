@@ -73,7 +73,7 @@ class SMSService {
    * @param {Object} user - User data
    * @returns {Promise<Object>} Send result
    */
-  async sendEventRegistrationSMS(phoneNumber, event, user) {
+  async sendEventRegistrationSMS(phoneNumber, event, _user) {
     const message = `🎉 Registration confirmed! You're registered for "${event.title}" on ${new Date(event.startDateTime).toLocaleDateString()} at ${event.location}. Event starts at ${new Date(event.startDateTime).toLocaleTimeString()}. See you there! - Eazy Event`;
 
     return await this.sendSMS(phoneNumber, message);

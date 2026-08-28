@@ -3,7 +3,7 @@
  * Consolidates all validation patterns to eliminate duplication
  */
 
-const { body, param, query, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 const { validatePassword } = require('../config/security');
 
 // Common validation rules
@@ -53,7 +53,7 @@ const commonValidations = {
   // Phone validation
   phone: (field = 'phone') => body(field)
     .optional()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/)
+    .matches(/^[+]?[1-9][\d]{0,15}$/)
     .withMessage('Please provide a valid phone number'),
 
   // Date validation
@@ -107,13 +107,7 @@ const validationSets = {
   // Password change validation
   passwordChange: [
     body('currentPassword').notEmpty().withMessage('Current password is required'),
-    commonValidations.password('newPassword'),
-    body('confirmPassword').custom((value, { req }) => {
-      if (value !== req.body.newPassword) {
-        throw new Error('Passwords do not match');
-      }
-      return true;
-    })
+    commonValidations.password('newPassword')
   ],
 
   // Event creation validation
@@ -187,7 +181,7 @@ const sanitizeInput = (req, res, next) => {
     if (obj && typeof obj === 'object') {
       const sanitized = {};
       for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
           sanitized[key] = sanitizeObject(obj[key]);
         }
       }

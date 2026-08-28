@@ -84,7 +84,7 @@ class EventAnalyticsService {
    * @param {String} userId - User ID
    * @returns {Promise<Object>} Analytics update result
    */
-  static async trackCheckIn(eventId, userId) {
+  static async trackCheckIn(eventId) {
     try {
       let analytics = await EventAnalytics.findOne({ eventId });
       
@@ -136,7 +136,7 @@ class EventAnalyticsService {
    * @param {Object} options - Query options
    * @returns {Promise<Object>} Event analytics data
    */
-  static async getEventAnalytics(eventId, options = {}) {
+  static async getEventAnalytics(eventId) {
     try {
       let analytics = await EventAnalytics.findOne({ eventId });
       

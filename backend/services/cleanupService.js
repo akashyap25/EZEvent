@@ -1,6 +1,5 @@
 const Token = require('../models/Token');
 const PasswordReset = require('../models/PasswordReset');
-const { cleanupExpiredTokens } = require('../middlewares/secureAuth');
 
 class CleanupService {
   constructor() {
@@ -76,14 +75,9 @@ class CleanupService {
 
   // Clean up old sessions (optional - handled by MongoDB TTL)
   async cleanupOldSessions() {
-    try {
-      // This would be handled by MongoDB TTL indexes
-      // But we can add custom cleanup logic here if needed
-      return { deletedCount: 0 };
-    } catch (error) {
-      console.error('Error cleaning up old sessions:', error);
-      throw error;
-    }
+    // This would be handled by MongoDB TTL indexes
+    // But we can add custom cleanup logic here if needed
+    return { deletedCount: 0 };
   }
 
   // Manual cleanup trigger

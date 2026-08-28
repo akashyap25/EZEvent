@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Users, 
-  Plus, 
   Trash2, 
-  Edit, 
   Shield, 
   UserPlus,
   Crown,
-  Settings,
-  X as CloseIcon
+  Settings
 } from 'lucide-react';
 import axios from 'axios';
 import { SERVER_URL } from '../../Utils/Constants';
@@ -32,6 +29,7 @@ const EventCollaboration = ({ eventId, onClose }) => {
       fetchCollaborators();
       fetchRolesAndPermissions();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
   const fetchCollaborators = async () => {

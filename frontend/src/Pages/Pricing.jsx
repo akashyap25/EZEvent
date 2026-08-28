@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Zap, Building2, Crown } from 'lucide-react';
 import Card from '../Components/UI/Card';
@@ -57,7 +56,7 @@ const Pricing = () => {
             Simple, transparent pricing
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the plan that's right for your team. All plans include a 14-day free trial.
+            Choose the plan that&apos;s right for your team. All plans include a 14-day free trial.
           </p>
         </div>
 

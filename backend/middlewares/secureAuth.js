@@ -243,7 +243,7 @@ const logoutAllDevices = async (userId) => {
 // Clean up expired tokens (should be called periodically)
 const cleanupExpiredTokens = async () => {
   try {
-    const result = await Token.cleanupExpiredTokens();
+    await Token.cleanupExpiredTokens();
     } catch (error) {
     console.error('Token cleanup error:', error);
   }
