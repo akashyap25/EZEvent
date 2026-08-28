@@ -171,11 +171,11 @@ GET    /api/calendar-export/:id   → iCal export
 ```
 src/
 ├── Components/
-│   ├── AI/              → AIDescriptionGenerator, AITaskGenerator, EventChatbot
+│   ├── AI/              → DescriptionGenerator, EventChatbot
 │   ├── auth/            → Sign-in, RegisterForm (OTP-based)
 │   ├── Events/          → EventDetails, EventCard, CreateEvent, MyEvents, etc.
 │   ├── General/         → Dashboard, Settings, AllTasks, CheckoutButton, etc.
-│   ├── Navbar/          → Header, MobileNav
+│   ├── Navbar/          → Header
 │   ├── Sections/        → HeroSection
 │   ├── UI/              → Button, Card, Input, Dialog, LoadingSpinner, Skeleton
 │   └── [shared]         → Footer, Layout, ProtectedRoute, ErrorBoundary
@@ -239,6 +239,16 @@ Events: `join-room`, `leave-room`, `send-message`, `typing`, `notification`
 | Layer | Tool | Files | Coverage |
 |-------|------|-------|----------|
 | Integration | Custom runner | `tests/integration-runner.js` | 43 assertions, 12 groups |
-| Security | OWASP scanner | `tests/security-audit.js` | 16 checks (A01-A09) |
-| Load | Custom k6-style | `tests/load-test.js` | 50 users, 30s, RPS/p95/errors |
-| Unit | Jest + Supertest | `tests/*.test.js` (12 files) | Endpoint-level tests |
+| Security | OWASP scanner | `tests/security-audit.js` | 18 checks (A01, A02, A03, A05, A07, A09) |
+| Load | Custom k6-style | `tests/load-test.js` | Configurable concurrent users/duration; confirms rate limiter engages (429s) under sustained load rather than degrading |
+| Unit | Jest + Supertest | `tests/*.test.js` (13 files) | 74 tests, endpoint-level, `--runInBand` (shared Atlas test DB) |
+
+## 9. Application Bootstrap
+
+```
+app.js          → Pure Express app: middleware, route mounting, error handlers. No side effects, no .listen(). Exported for tests/CI boot-check.
+server.js       → Only file that calls .listen(). Sets up Socket.IO, Redis adapter, graceful shutdown.
+routes/index.js → mountRoutes(app) — centralizes all ~30 route-mount calls in one place.
+```
+
+Separating app construction from process bootstrap means `app.js` can be `require()`d by Jest/Supertest and by the CI boot-check (`node -e "require('./app')"`) with zero side effects — no port binding, no graceful-shutdown hooks to worry about in tests.

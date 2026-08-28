@@ -125,14 +125,21 @@ User clicks "Get Tickets"
 
 ## 6. Deployment Architecture
 
+**Current CI (`.github/workflows/ci.yml`), 3 jobs, runs on every PR into `dev`/`master`:**
 ```
 ┌──── GitHub ─────┐
-│ Push to dev     │──── Gate 1: Project validation
-│ Push to master  │──── Gate 2: Backend lint + audit
-└─────────────────┘──── Gate 3: Frontend build
-                   ──── Gate 4: Integration tests (43) + Security (16)
-                   ──── Gate 5: Deploy (dev or prod)
+│ Pull request    │──── backend-checks:  npm ci → lint → boot-check → Jest (13 files, 74 tests)
+│ into dev/master │──── frontend-checks: npm ci → lint → build
+└─────────────────┘──── all-checks-passed: gate job, required by branch protection
+```
+No automated deploy step exists yet — merging to `dev`/`master` only proves the code is correct, it does not ship it anywhere. A deploy job (Render/Vercel for the free-tier track, or AWS for the stretch track) is planned — see `INTERVIEW_READINESS_PLAN.md` Phase 4.
 
+Separately, two standalone scripts (not part of the Jest/CI gate, run manually against a live server) provide additional verification:
+- `tests/integration-runner.js` — 43 assertions across 12 groups against a running instance
+- `tests/security-audit.js` — 18 OWASP Top 10 checks (A01, A02, A03, A05, A07, A09)
+- `tests/load-test.js` — configurable concurrent-user load test; confirmed the rate limiter correctly returns 429s under sustained concurrent load rather than degrading
+
+```
 DEV:  docker-compose.dev.yml  → MongoDB + Redis + Backend + Frontend
 PROD: docker-compose.prod.yml → Backend + Redis (MongoDB Atlas external)
 ```
@@ -155,3 +162,13 @@ PROD: docker-compose.prod.yml → Backend + Redis (MongoDB Atlas external)
 4. **Authorization:** RBAC (user/admin/moderator) + org roles + event ownership
 5. **Data:** Passwords hashed (bcrypt 12), tokens hashed, PII scrubbed from logs
 6. **Monitoring:** Sentry error tracking, request tracing, audit logs
+
+## 9. Feature Tiering
+
+For interview/portfolio purposes, features are split into flagship (deep, fully tested, primary demo material) and supporting (functional, not the focus). See `INTERVIEW_READINESS_PLAN.md` for the full rationale and hardening checklist.
+
+| Tier | Features |
+|------|----------|
+| **Flagship (7)** | Event ticketing & payments (Stripe), real-time chat (Socket.IO + Redis adapter), multi-tenant Organizations + RBAC, search & analytics, QR check-in, SMS notifications (Twilio), push notifications (Web Push/VAPID) |
+| **Supporting** | AI generation (Gemini), social share, calendar export, waitlist, support tickets, recurring events, event collaboration, event templates, engagement badges |
+
