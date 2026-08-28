@@ -1,15 +1,29 @@
-<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="100" fill="#705CF7"/>
-  
-  <!-- Calendar -->
-  <rect x="40" y="50" width="120" height="110" fill="white" stroke="#5c49D9" stroke-width="5" rx="10"/>
-  <rect x="50" y="60" width="20" height="20" fill="#5c49D9"/>
-  <rect x="130" y="60" width="20" height="20" fill="#5c49D9"/>
-  <line x1="40" y1="80" x2="160" y2="80" stroke="#5c49D9" stroke-width="5"/>
-  
-  <!-- Checkmark -->
-  <polyline points="70,110 90,130 130,90" fill="none" stroke="#705CF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="55%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="210" y1="246" x2="302" y2="338" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
 
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bgGrad)"/>
+
+  <!-- Calendar binder rings -->
+  <rect x="196" y="128" width="18" height="48" rx="9" fill="#ffffff" opacity="0.85"/>
+  <rect x="298" y="128" width="18" height="48" rx="9" fill="#ffffff" opacity="0.85"/>
+
+  <!-- Calendar card -->
+  <rect x="136" y="156" width="240" height="216" rx="26" fill="#ffffff"/>
+
+  <!-- Header divider -->
+  <rect x="136" y="214" width="240" height="8" rx="4" fill="#c7d2fe"/>
+
+  <!-- Highlighted event day -->
+  <rect x="210" y="246" width="92" height="92" rx="18" fill="url(#accentGrad)"/>
+  <polyline points="234,292 258,316 300,268" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

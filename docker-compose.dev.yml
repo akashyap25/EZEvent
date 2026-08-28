@@ -22,6 +22,8 @@ services:
       - redis
     restart: unless-stopped
     command: npm run dev
+    mem_limit: 768m
+    mem_reservation: 384m
 
   frontend:
     build:
@@ -37,6 +39,8 @@ services:
     depends_on:
       - backend
     command: npm run dev -- --host 0.0.0.0 --port 5174
+    mem_limit: 768m
+    mem_reservation: 384m
 
   mongo:
     image: mongo:7
@@ -45,12 +49,17 @@ services:
     volumes:
       - mongo_dev_data:/data/db
     restart: unless-stopped
+    mem_limit: 512m
+    mem_reservation: 256m
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
 
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
     restart: unless-stopped
+    mem_limit: 128m
+    mem_reservation: 64m
 
 volumes:
   mongo_dev_data:
