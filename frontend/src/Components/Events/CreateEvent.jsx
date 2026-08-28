@@ -256,16 +256,17 @@ const CreateEvent = ({ editEventId } = {}) => {
     } catch (error) {
       console.error("Error uploading image:", error);
 
-      // Fallback to local preview so the user can still continue the wizard
-      const localUrl = URL.createObjectURL(file);
-      setImagePreview(localUrl);
-      setCurrentImageUrl(localUrl);
-      setFormData(prev => ({ ...prev, imageUrl: localUrl }));
+      // Do NOT fall back to a local blob URL here — it would satisfy the
+      // "required" validation with a value the backend can never accept,
+      // letting the user proceed past this step with no real image.
+      setImagePreview(null);
+      setCurrentImageUrl(null);
+      setFormData(prev => ({ ...prev, imageUrl: '' }));
 
       Swal.fire({
-        title: 'Upload Warning',
-        text: `${error.message || 'Failed to upload image'}. Using local preview instead.`,
-        icon: 'warning',
+        title: 'Upload Failed',
+        text: `${error.message || 'Failed to upload image'}. Please try again.`,
+        icon: 'error',
         confirmButtonText: 'OK'
       });
     } finally {
@@ -295,6 +296,7 @@ const CreateEvent = ({ editEventId } = {}) => {
 
   // Navigate to next step
   const handleNext = async () => {
+    if (uploadingImage) return;
     const isValid = await validateCurrentStep();
     if (isValid && currentStep < STEPS.length) {
       setCurrentStep(prev => prev + 1);
@@ -537,13 +539,21 @@ const CreateEvent = ({ editEventId } = {}) => {
             
             <div className="flex gap-3">
               {currentStep < STEPS.length ? (
-                <Button
-                  onClick={handleNext}
-                  icon={ArrowRight}
-                  iconPosition="right"
-                >
-                  Next
-                </Button>
+                <div className="flex flex-col items-end gap-1">
+                  <Button
+                    onClick={handleNext}
+                    disabled={uploadingImage}
+                    icon={ArrowRight}
+                    iconPosition="right"
+                  >
+                    Next
+                  </Button>
+                  {uploadingImage && (
+                    <p className="text-xs text-blue-600 dark:text-blue-400">
+                      Please wait for the image to finish uploading&hellip;
+                    </p>
+                  )}
+                </div>
               ) : (
                 <div className="flex gap-2">
                   <Button
