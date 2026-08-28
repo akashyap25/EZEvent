@@ -104,9 +104,10 @@ Configure your `.env` file:
 ```env
 VITE_SERVER_URL=http://localhost:5000
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
-VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
-VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 ```
+
+Note: image uploads (event images, avatars) go through the backend's `/api/upload` endpoint, which uses the `CLOUDINARY_*` variables configured in the backend's `.env` — no Cloudinary credentials are needed on the frontend.
+
 
 Start the frontend development server:
 ```bash
