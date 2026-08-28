@@ -7,8 +7,8 @@ const csrfProtection = (req, res, next) => {
     return next();
   }
 
-  // Skip CSRF for API routes that don't need it (like webhooks)
-  if (req.path.startsWith('/api/webhooks/') || req.path.startsWith('/api/health')) {
+  // Skip CSRF for API routes that don't need it
+  if (req.path.startsWith('/api/health')) {
     return next();
   }
 

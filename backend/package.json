@@ -57,7 +57,6 @@
     "redis": "^5.8.2",
     "socket.io": "^4.8.1",
     "stripe": "^16.5.0",
-    "svix": "^1.25.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "twilio": "^5.9.0",

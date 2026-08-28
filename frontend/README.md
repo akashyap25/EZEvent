@@ -7,7 +7,7 @@ Welcome to **Eazy Event**, a full-stack event management application built with 
 ## 🚀 Features
 
 ### Core Features
-- **User Authentication & Authorization** - Secure login/registration with Clerk
+- **User Authentication & Authorization** - Secure JWT-based login/registration with OAuth (Google, GitHub)
 - **Event Management** - Create, update, delete, and manage events
 - **Event Registration** - Users can register for events with payment processing
 - **Task Management** - Assign and track tasks for events
@@ -63,7 +63,6 @@ Before you begin, ensure you have met the following requirements:
 - **Node.js** (v18.x or later)
 - **npm** (v9.x or later) or **yarn**
 - **MongoDB Atlas** account or local MongoDB instance
-- **Clerk** account for authentication
 - **Stripe** account for payments
 - **Cloudinary** account for image storage
 
@@ -77,18 +76,17 @@ cd Eazy_Event
 
 ### 2. Backend Setup
 
-The backend runs in a **separate repository**. Clone and run it first:
+The backend lives in the `backend/` folder of this same repository:
 
 ```bash
-git clone https://github.com/akashyap25/eazy_event_server.git
-cd eazy_event_server
+cd backend
 npm install
 cp .env.example .env
 # Edit .env (MONGO_URI, JWT_SECRET, etc.)
 npm start
 ```
 
-See [eazy_event_server](https://github.com/akashyap25/eazy_event_server) for full backend setup and environment variables.
+See [backend/README.md](../backend/README.md) for full backend setup and environment variables.
 
 ### 3. Frontend Setup
 
@@ -117,12 +115,12 @@ npm run dev
 
 ## 🧪 Testing
 
-Backend tests are in the [eazy_event_server](https://github.com/akashyap25/eazy_event_server) repo (`npm test` there).
+Backend tests are in the `backend/` folder (`npm test` there).
 
 ## 📚 API Documentation
 
 ### Authentication
-All protected routes require authentication via Clerk.
+All protected routes require a JWT access token (`Authorization: Bearer <token>`), obtained via `/api/users/login` or OAuth (Google/GitHub).
 
 ### Events API
 - `GET /api/events` - Get all events
@@ -134,13 +132,13 @@ All protected routes require authentication via Clerk.
 
 ### Users API
 - `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create user
-- `PUT /api/users/:clerkId` - Update user
-- `DELETE /api/users/:clerkId` - Delete user
+- `POST /api/users/register` - Register a new user
+- `PUT /api/users/:id` - Update user (protected)
+- `DELETE /api/users/:id` - Delete user (protected)
 
 ## 🔒 Security Features
 
-- **Authentication** - Clerk-based authentication
+- **Authentication** - JWT-based authentication with OAuth (Google, GitHub)
 - **Authorization** - Role-based access control
 - **Input Validation** - Joi schema validation
 - **Rate Limiting** - API rate limiting
@@ -189,7 +187,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Clerk for authentication services
 - Stripe for payment processing
 - Cloudinary for image storage
 - Material-UI for UI components

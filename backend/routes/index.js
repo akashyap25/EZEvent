@@ -7,7 +7,6 @@ function mountRoutes(app) {
   const orderRoutes = require('./orderRoutes');
   const categoryRoutes = require('./categoryRoutes');
   const taskRoutes = require('./taskRoutes');
-  const webhookRoutes = require('./webhookRoutes');
   const chatRoutes = require('./chatRoutes');
   const pushNotificationRoutes = require('./pushNotificationRoutes');
   const emailRoutes = require('./emailRoutes');
@@ -43,7 +42,6 @@ function mountRoutes(app) {
   app.use('/api/users', userRoutes);
   app.use('/api/orders', orderRoutes);
   app.use('/api/tasks', taskRoutes);
-  app.use('/api/webhooks', webhookRoutes);
   app.use('/api/chat', chatRoutes);
   app.use('/api/notifications', pushNotificationRoutes);
   app.use('/api/email', emailRoutes);
