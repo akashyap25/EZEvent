@@ -1,52 +1,5 @@
 const helmet = require('helmet');
-const xss = require('xss');
 const DOMPurify = require('isomorphic-dompurify');
-
-// XSS sanitization options
-const xssOptions = {
-  whiteList: {
-    // Allow basic HTML tags
-    p: [],
-    br: [],
-    strong: [],
-    em: [],
-    u: [],
-    b: [],
-    i: [],
-    h1: [],
-    h2: [],
-    h3: [],
-    h4: [],
-    h5: [],
-    h6: [],
-    ul: [],
-    ol: [],
-    li: [],
-    blockquote: [],
-    a: ['href', 'title', 'target'],
-    img: ['src', 'alt', 'title', 'width', 'height'],
-    div: ['class'],
-    span: ['class'],
-    code: [],
-    pre: [],
-    table: [],
-    thead: [],
-    tbody: [],
-    tr: [],
-    td: [],
-    th: []
-  },
-  stripIgnoreTag: true,
-  stripIgnoreTagBody: ['script', 'style'],
-  css: false, // Disable CSS parsing for security
-  allowList: {
-    // Allow specific attributes
-    a: ['href', 'title', 'target'],
-    img: ['src', 'alt', 'title', 'width', 'height'],
-    div: ['class'],
-    span: ['class']
-  }
-};
 
 // Sanitize HTML content
 const sanitizeHTML = (html) => {
@@ -102,7 +55,7 @@ const sanitizeData = (data) => {
   if (data && typeof data === 'object') {
     const sanitized = {};
     for (const key in data) {
-      if (data.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
         // Sanitize the key as well
         const cleanKey = sanitizeText(key);
         sanitized[cleanKey] = sanitizeData(data[key]);

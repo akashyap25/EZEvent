@@ -80,7 +80,7 @@ router.get('/github/callback',
 router.post('/link/:provider', async (req, res) => {
   try {
     const { provider } = req.params;
-    const { oauthId, email } = req.body;
+    const { oauthId } = req.body;
     
     if (!req.user) {
       return res.status(401).json({

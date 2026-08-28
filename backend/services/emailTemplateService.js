@@ -1,7 +1,4 @@
 const communicationConfig = require('../config/communicationConfig');
-const Event = require('../models/event');
-const { User } = require('../models/user');
-
 class EmailTemplateService {
   constructor() {
     this.transporter = communicationConfig.getEmailTransporter();
@@ -231,7 +228,7 @@ class EmailTemplateService {
    * @returns {String} HTML email
    */
   generateEventReminderEmail(data) {
-    const { event, user, reminderType = '24h' } = data;
+    const { event, user } = data;
     
     const timeUntilEvent = this.getTimeUntilEvent(event.startDateTime);
     

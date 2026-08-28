@@ -1,9 +1,8 @@
 const express = require('express');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
-const { handleValidationErrors, commonValidations } = require("../utils/validationUtils");
 const smsService = require('../services/smsService');
 const Event = require('../models/event');
-const { User } = require('../models/user');
+const User = require('../models/user');
 const { Order } = require('../models/order');
 
 const router = express.Router();

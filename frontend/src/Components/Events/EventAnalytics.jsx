@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   BarChart3, 
   Users, 
   Eye, 
   CheckCircle, 
-  TrendingUp, 
-  Calendar,
+  TrendingUp,
   Download,
   RefreshCw
 } from 'lucide-react';
 import apiService from '../../Utils/apiService';
-import { SERVER_URL } from '../../Utils/Constants';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import LoadingSpinner from '../UI/LoadingSpinner';
@@ -19,12 +17,13 @@ const EventAnalytics = ({ eventId, onClose }) => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeRange, setTimeRange] = useState('7d');
+  const [timeRange] = useState('7d');
 
   useEffect(() => {
     if (eventId) {
       fetchAnalytics();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, timeRange]);
 
   const fetchAnalytics = async () => {

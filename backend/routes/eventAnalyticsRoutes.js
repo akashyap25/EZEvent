@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { handleValidationErrors, commonValidations } = require("../utils/validationUtils");
-const { body, param } = require('express-validator');
+const { body } = require('express-validator');
 const EventAnalyticsService = require('../services/eventAnalyticsService');
 const { requireOrganization, requireOrgPermission } = require('../middlewares/organizationMiddleware');
 const Event = require('../models/event');
@@ -253,15 +253,6 @@ router.get('/organization/:orgId',
       }
       
       const orgObjectId = new mongoose.Types.ObjectId(orgId);
-      
-      // Get organization events
-      const events = await Event.find({
-        organizationId: orgObjectId,
-        isDeleted: { $ne: true },
-        createdAt: { $gte: start, $lte: end }
-      });
-      
-      const eventIds = events.map(e => e._id);
       
       // Calculate metrics
       const [

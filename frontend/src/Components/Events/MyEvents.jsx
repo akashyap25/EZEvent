@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { SERVER_URL } from '../../Utils/Constants';
 import apiService from '../../Utils/apiService';
 import EventCard from './EventCard';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import LoadingSpinner from '../UI/LoadingSpinner';
-import { Calendar, Plus, Filter, Search } from 'lucide-react';
+import { Calendar, Plus, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const MyEvents = () => {

@@ -2,7 +2,6 @@ const Stripe = require('stripe');
 const Order = require('../models/order');
 const Event = require('../models/event');
 const User = require('../models/user');
-const nodemailer = require('nodemailer');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -78,7 +77,7 @@ const handleStripeWebhook = async (req, res) => {
     }
 
       // Create order with stripeId
-      const newOrder = await Order.create({
+      await Order.create({
         event: metadata.eventId,
         buyer: metadata.buyerId,
         totalAmount: session.amount_total / 100,

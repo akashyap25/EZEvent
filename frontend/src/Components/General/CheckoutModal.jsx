@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { X, CreditCard, Download, Eye, Calendar, MapPin, User, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { X, CreditCard, Download, Eye, Calendar, MapPin, CheckCircle } from 'lucide-react';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
-import LoadingSpinner from '../UI/LoadingSpinner';
 import apiService from '../../Utils/apiService';
 import { generateTicketPDF } from '../../Utils/generatePDF';
 
@@ -107,11 +106,6 @@ const CheckoutModal = ({ event, isOpen, onClose, onSuccess, onViewTicket }) => {
     } finally {
       setDownloading(false);
     }
-  };
-
-  const handleViewTicket = () => {
-    // This will be handled by the parent component (CheckoutButton)
-    // The TicketModal will be opened from there
   };
 
   if (!isOpen) return null;

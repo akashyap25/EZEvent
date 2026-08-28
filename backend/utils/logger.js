@@ -36,7 +36,7 @@ const transports = [
   }),
   // File transport for errors
   new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/error.log'),
+    filename: path.join(__dirname, '../logs/error.log'),
     level: 'error',
     format: winston.format.combine(
       winston.format.timestamp(),
@@ -45,7 +45,7 @@ const transports = [
   }),
   // File transport for all logs
   new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/combined.log'),
+    filename: path.join(__dirname, '../logs/combined.log'),
     format: winston.format.combine(
       winston.format.timestamp(),
       winston.format.json()

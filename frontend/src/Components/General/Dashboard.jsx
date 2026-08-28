@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import apiService from '../../Utils/apiService';
 import { useAuth } from '../../contexts/AuthContext';
 import Card from '../UI/Card';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import { 
-  Calendar, Bookmark, CheckSquare, Bell, 
-  TrendingUp, Clock, MapPin, ArrowRight 
+  Calendar, Bookmark, CheckSquare, Bell, Clock, MapPin, ArrowRight 
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -21,6 +20,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDashboardData = async () => {
@@ -62,7 +62,7 @@ const Dashboard = () => {
           Welcome back, {user?.firstName || 'User'}!
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Here's what's happening with your events.
+          Here&apos;s what&apos;s happening with your events.
         </p>
       </div>
 
@@ -145,7 +145,7 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Bookmarked Events</h2>
           </div>
           {stats.bookmarkedEvents.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No bookmarked events. Browse and save events you're interested in!</p>
+            <p className="text-gray-500 text-center py-8">No bookmarked events. Browse and save events you&apos;re interested in!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {stats.bookmarkedEvents.map(bookmark => {

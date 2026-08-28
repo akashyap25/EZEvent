@@ -1,4 +1,6 @@
-import React from 'react';
+import { Suspense, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { EventGridSkeleton } from './UI/Skeleton';
 import { Outlet } from 'react-router-dom';
 import Header from './Navbar/Header';
 import Footer from './Footer';
@@ -10,6 +12,15 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Layout = () => {
   const { loading } = useAuth();
+  const location = useLocation();
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    // brief hide to trigger fade-in on route change
+    setVisible(false);
+    const t = setTimeout(() => setVisible(true), 60);
+    return () => clearTimeout(t);
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -24,8 +35,12 @@ const Layout = () => {
       <ScrollToTop />
       <Onboarding />
       <Header />
-      <main className="flex-1">
-        <Outlet />
+      <main className="flex-1 min-h-[60vh] relative">
+        <Suspense fallback={<div className="absolute inset-0 p-6 overflow-auto"><EventGridSkeleton /></div>}>
+          <div className={`h-full transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+            <Outlet />
+          </div>
+        </Suspense>
       </main>
       <Footer />
       <ScrollToTopButton />

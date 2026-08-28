@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Filter, ChevronDown } from 'lucide-react';
 import Button from '../UI/Button';
@@ -80,12 +80,12 @@ const CategoryFilter = () => {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-10" 
+            className="fixed inset-0 z-40" 
             onClick={() => setIsOpen(false)}
           />
           
           {/* Dropdown */}
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 max-h-60 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
             {categories.map((category) => (
               <button
                 key={category._id}

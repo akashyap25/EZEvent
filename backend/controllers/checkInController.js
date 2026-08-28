@@ -1,8 +1,7 @@
 const CheckIn = require('../models/checkIn');
 const Order = require('../models/order');
-const Event = require('../models/event');
 const qrService = require('../services/qrService');
-const { success, created, error, notFound, serverError } = require('../utils/responseHandler');
+const { success, error, notFound, serverError } = require('../utils/responseHandler');
 
 const generateTicketQR = async (req, res) => {
   try {
@@ -97,8 +96,6 @@ const scanCheckIn = async (req, res) => {
     if (!verification.valid) {
       return error(res, verification.error, 400);
     }
-    
-    const { eventId, orderId, attendeeId } = verification.data;
     
     // Find check-in record
     const checkIn = await CheckIn.findOne({ 

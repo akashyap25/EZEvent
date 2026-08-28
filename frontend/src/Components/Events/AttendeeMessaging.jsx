@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState } from 'react';
 import apiService from '../../Utils/apiService';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
-import { Send, Mail, Users, AlertCircle, CheckCircle } from 'lucide-react';
+import { Send, Mail, AlertCircle, CheckCircle } from 'lucide-react';
 
 /**
  * Attendee Messaging — Organizer can send custom email to all attendees

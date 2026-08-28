@@ -1,7 +1,7 @@
 const Organization = require('../models/organization');
 const OrganizationMember = require('../models/organizationMember');
 const OrganizationInvite = require('../models/organizationInvite');
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 // Create a new organization
 const createOrganization = async (req, res) => {

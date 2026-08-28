@@ -13,7 +13,7 @@ const User = require('../models/user');
 const Notification = require('../models/notification');
 
 describe('Notifications API', () => {
-  let app, authToken, userId;
+  let app, authToken;
 
   beforeAll(async () => {
     if (mongoose.connection.readyState === 0) {
@@ -31,7 +31,6 @@ describe('Notifications API', () => {
       username: 'notifuser', firstName: 'Notif', lastName: 'Tester'
     });
     authToken = reg.body.accessToken;
-    userId = reg.body.user._id;
   });
 
   afterAll(async () => {

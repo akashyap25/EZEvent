@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import apiService from '../Utils/apiService';
 import { Link, useParams } from 'react-router-dom';
-import EventCard from './Events/EventCard';
+import { useAuth } from '../contexts/AuthContext';
 import Card from './UI/Card';
 import Button from './UI/Button';
 import LoadingSpinner from './UI/LoadingSpinner';
+import ImageUpload from './General/ImageUpload';
 import { 
-  User, 
   Calendar, 
   Ticket, 
   Settings, 
@@ -20,9 +20,11 @@ import {
 
 const ProfilePage = () => {
   const { id: userId } = useParams();
+  const { user: currentUser } = useAuth();
+  const isOwnProfile = currentUser?._id === userId;
+  const [showAvatarUpload, setShowAvatarUpload] = useState(false);
 
   const [user, setUser] = useState(null);
-  const [orders, setOrders] = useState([]);
   const [orderedEvents, setOrderedEvents] = useState([]);
   const [organizedEvents, setOrganizedEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,6 @@ const ProfilePage = () => {
         const ordersResponse = await apiService.get(`/api/orders/user/${userId}`);
         const ordersData = Array.isArray(ordersResponse?.data) ? ordersResponse.data : 
                           Array.isArray(ordersResponse) ? ordersResponse : [];
-        setOrders(ordersData);
         setOrderedEvents(ordersData.map((order) => order.event));
 
         // Fetch organized events (returns array directly)
@@ -80,6 +81,17 @@ const ProfilePage = () => {
     }
   }, [userId]);
 
+  const handleAvatarUploaded = async (avatarUrl) => {
+    try {
+      await apiService.put(`/api/users/${userId}`, { avatar: avatarUrl });
+      setUser((prev) => ({ ...prev, avatar: avatarUrl }));
+    } catch (error) {
+      console.error('Error saving avatar:', error);
+    } finally {
+      setShowAvatarUpload(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -107,10 +119,27 @@ const ProfilePage = () => {
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
             {/* Profile Picture */}
             <div className="relative">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold">
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
-              </div>
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-white/30"
+                />
+              ) : (
+                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold">
+                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                </div>
+              )}
               <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white"></div>
+              {isOwnProfile && (
+                <button
+                  type="button"
+                  onClick={() => setShowAvatarUpload(true)}
+                  className="absolute inset-0 w-24 h-24 rounded-full bg-black/0 hover:bg-black/40 transition-colors flex items-center justify-center text-transparent hover:text-white text-xs font-medium"
+                >
+                  Change
+                </button>
+              )}
             </div>
             
             {/* User Info */}
@@ -265,6 +294,18 @@ const ProfilePage = () => {
           </Card>
         </div>
       </div>
+
+      {showAvatarUpload && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Update Profile Picture</h3>
+              <Button variant="ghost" size="sm" onClick={() => setShowAvatarUpload(false)}>Close</Button>
+            </div>
+            <ImageUpload currentImage={user?.avatar} onUploadComplete={handleAvatarUploaded} />
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

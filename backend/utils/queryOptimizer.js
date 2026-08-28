@@ -1,4 +1,4 @@
-const { cacheService, CacheKeys } = require('../services/cacheService');
+const { cacheService } = require('../services/cacheService');
 const logger = require('../utils/logger');
 
 class QueryOptimizer {
@@ -11,15 +11,12 @@ class QueryOptimizer {
     const {
       page = 1,
       limit = 10,
-      populate = ['organizer', 'category'],
       sort = { createdAt: -1 },
       cache = true,
       cacheTTL = 300 // 5 minutes
     } = options;
 
     const Event = require('../models/event');
-    const User = require('../models/user');
-    const Category = require('../models/category');
 
     try {
       // Create cache key
@@ -145,14 +142,12 @@ class QueryOptimizer {
     const {
       page = 1,
       limit = 10,
-      populate = ['events'],
       sort = { createdAt: -1 },
       cache = true,
       cacheTTL = 300
     } = options;
 
     const User = require('../models/user');
-    const Event = require('../models/event');
 
     try {
       const cacheKey = `users:populated:${JSON.stringify(query)}:${page}:${limit}:${JSON.stringify(sort)}`;
@@ -242,15 +237,12 @@ class QueryOptimizer {
     const {
       page = 1,
       limit = 10,
-      populate = ['event', 'assignedTo'],
       sort = { dueDate: 1 },
       cache = true,
       cacheTTL = 300
     } = options;
 
     const Task = require('../models/task');
-    const Event = require('../models/event');
-    const User = require('../models/user');
 
     try {
       const cacheKey = `tasks:populated:${JSON.stringify(query)}:${page}:${limit}:${JSON.stringify(sort)}`;

@@ -1,9 +1,8 @@
-const cors = require('cors');
+const logger = require('../utils/logger');
 
 // Environment-based CORS configuration
 const getCorsConfig = () => {
   const isDevelopment = process.env.NODE_ENV === 'development';
-  const isProduction = process.env.NODE_ENV === 'production';
   
   // Allowed origins based on environment
   const allowedOrigins = isDevelopment 
@@ -156,7 +155,8 @@ const corsLogger = (req, res, next) => {
   const userAgent = req.get('User-Agent');
   
   if (origin) {
-    }
+    logger.debug(`CORS request from origin: ${origin} (${userAgent || 'unknown UA'})`);
+  }
   
   next();
 };

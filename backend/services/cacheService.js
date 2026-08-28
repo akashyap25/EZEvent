@@ -25,8 +25,6 @@ class CacheService {
         port: process.env.REDIS_PORT || 6379,
         password: process.env.REDIS_PASSWORD || undefined,
         db: process.env.REDIS_DB || 0,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
         lazyConnect: true,
         // Connection pool settings
         family: 4,

@@ -1,7 +1,7 @@
 const Review = require('../models/review');
 const Order = require('../models/order');
 const Event = require('../models/event');
-const { success, created, error, notFound, paginated, serverError } = require('../utils/responseHandler');
+const { success, created, error, notFound, serverError } = require('../utils/responseHandler');
 
 const createReview = async (req, res) => {
   try {

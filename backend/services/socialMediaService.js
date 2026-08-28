@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 class SocialMediaService {
   constructor() {
     this.platforms = {
@@ -91,9 +89,10 @@ class SocialMediaService {
         if (description) params.append('summary', description);
         break;
 
-      case 'whatsapp':
+      case 'whatsapp': {
         const whatsappText = `${title || ''}\n\n${description || ''}\n\n${url}`;
         return `${baseUrl}?text=${encodeURIComponent(whatsappText)}`;
+      }
 
       case 'telegram':
         params.append('url', url);
@@ -379,7 +378,7 @@ class SocialMediaService {
    * @param {Object} analytics - Analytics data
    * @returns {Array} Sharing recommendations
    */
-  generateSharingRecommendations(event, analytics) {
+  generateSharingRecommendations(event) {
     const recommendations = [];
     
     // Time-based recommendations

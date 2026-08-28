@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Input from './UI/Input';
 import { 
-  Calendar, 
   Mail, 
   Phone, 
   MapPin, 
@@ -90,7 +90,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <MapPin className="h-4 w-4" />
-                <span className="text-sm">San Francisco, CA</span>
+                <span className="text-sm">India</span>
               </div>
             </div>
           </div>
@@ -176,25 +176,26 @@ const Footer = () => {
               {subscribed ? (
                 <div className="flex items-center gap-2 px-6 py-3 bg-green-500/10 border border-green-500/30 rounded-lg">
                   <span className="text-green-400 text-lg">✓</span>
-                  <p className="text-green-300 font-medium">You're subscribed! We'll keep you updated.</p>
+                  <p className="text-green-300 font-medium">You&apos;re subscribed! We&apos;ll keep you updated.</p>
                 </div>
               ) : (
-                <div className="flex space-x-2 w-full">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && email.includes('@')) { setSubscribed(true); setEmail(''); } }}
-                    className="flex-1 px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 backdrop-blur-sm"
-                  />
-                  <button
-                    onClick={() => { if (email && email.includes('@')) { setSubscribed(true); setEmail(''); } }}
-                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-md hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
-                  >
-                    Subscribe
-                  </button>
-                </div>
+                  <div className="flex space-x-2 w-full">
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && email.includes('@')) { setSubscribed(true); setEmail(''); } }}
+                      className="flex-1"
+                      inputClassName="h-11"
+                    />
+                    <button
+                      onClick={() => { if (email && email.includes('@')) { setSubscribed(true); setEmail(''); } }}
+                      className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-md hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+                    >
+                      Subscribe
+                    </button>
+                  </div>
               )}
             </div>
           </div>
@@ -211,7 +212,7 @@ const Footer = () => {
               <span>© {currentYear} EZEvent. All rights reserved.</span>
               <span className="hidden sm:inline">Made with</span>
               <Heart className="h-4 w-4 text-red-500 hidden sm:inline" />
-              <span className="hidden sm:inline">in San Francisco</span>
+              <span className="hidden sm:inline">in India</span>
             </div>
 
             {/* Social Links */}

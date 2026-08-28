@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from '../Utils/Constants';
-import Button from '../Components/UI/Button';
 import Card from '../Components/UI/Card';
 import { Mail, ArrowLeft, CheckCircle, Lock, Phone, Shield } from 'lucide-react';
 
@@ -196,7 +195,7 @@ const ForgotPassword = () => {
           <>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Reset Password</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We'll send a 6-digit verification code to reset your password.
+              We&apos;ll send a 6-digit verification code to reset your password.
             </p>
 
             {/* Method Selection */}
@@ -320,7 +319,7 @@ const ForgotPassword = () => {
 
               <div className="text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Didn't receive the code?{' '}
+                  Didn&apos;t receive the code?{' '}
                   {resendTimer > 0 ? (
                     <span className="text-gray-500">Resend in {resendTimer}s</span>
                   ) : (

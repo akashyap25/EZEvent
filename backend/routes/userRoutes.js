@@ -1,6 +1,6 @@
 const express = require('express');
 const { createUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
-const { authenticateToken, requireAuth, optionalAuth } = require('../middlewares/authMiddleware');
+const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { 
   generateTokenPair, 
   refreshAccessToken, 
@@ -13,7 +13,6 @@ const {
   passwordResetRateLimit, 
   accountLockoutRateLimit 
 } = require('../middlewares/rateLimiting');
-const { validatePassword } = require('../config/security');
 const User = require('../models/user');
 const Token = require('../models/Token');
 const PasswordReset = require('../models/PasswordReset');
@@ -33,17 +32,6 @@ const validatePasswordChange = validationSets.passwordChange;
 
 const validatePasswordReset = [
   body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email')
-];
-
-const validatePasswordResetConfirm = [
-  body('token').notEmpty().withMessage('Reset token is required'),
-  body('newPassword').custom((value) => {
-    const validation = validatePassword(value);
-    if (!validation.isValid) {
-      throw new Error(validation.errors.join(', '));
-    }
-    return true;
-  })
 ];
 
 // Public routes
@@ -830,5 +818,8 @@ router.get('/preferences', authenticateToken, requireAuth, async (req, res) => {
 router.get('/:id', getUserById);
 router.put('/:id', authenticateToken, requireAuth, updateUser);
 router.delete('/:id', authenticateToken, requireAuth, deleteUser);
+
+// Internal endpoint used by the Clerk webhook to create users (see webhookController.js)
+router.post('/', createUser);
 
 module.exports = router;

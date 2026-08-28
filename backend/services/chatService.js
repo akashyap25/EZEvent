@@ -1,6 +1,6 @@
 const { Message, ChatRoom } = require('../models/chat');
 const Event = require('../models/event');
-const { User } = require('../models/user');
+const User = require('../models/user');
 const Order = require('../models/order');
 
 class ChatService {

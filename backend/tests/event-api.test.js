@@ -122,7 +122,7 @@ describe('Event API', () => {
     });
 
     it('should reject event creation without title', async () => {
-      const { title, ...eventWithoutTitle } = validEvent();
+      const { title: _title, ...eventWithoutTitle } = validEvent();
 
       const response = await request(app)
         .post('/api/events/create')

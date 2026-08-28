@@ -1,32 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { SERVER_URL } from '../../Utils/Constants';
 import apiService from '../../Utils/apiService';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import LoadingSpinner from '../UI/LoadingSpinner';
+import PushNotificationSettings from './PushNotificationSettings';
 import { 
   User, 
-  Mail, 
   Lock, 
   Bell, 
   Shield, 
   Palette,
   Save,
   Eye,
-  EyeOff,
-  Check,
-  X
+  EyeOff
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const Settings = () => {
-  const { user: currentUser, isAuthenticated, logout } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { user: currentUser, isAuthenticated, logout, loading: authLoading } = useAuth();
   const [saving, setSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [showPushSettings, setShowPushSettings] = useState(false);
   
   // Form states
   const [profileData, setProfileData] = useState({
@@ -274,7 +271,7 @@ const Settings = () => {
     );
   }
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -548,7 +545,7 @@ const Settings = () => {
                     ))}
                   </div>
                   
-                  <div className="mt-6">
+                  <div className="mt-6 flex flex-wrap gap-3">
                     <Button
                       onClick={handleNotificationUpdate}
                       variant="primary"
@@ -556,6 +553,13 @@ const Settings = () => {
                       icon={Save}
                     >
                       {saving ? 'Saving...' : 'Save Settings'}
+                    </Button>
+                    <Button
+                      onClick={() => setShowPushSettings(true)}
+                      variant="outline"
+                      icon={Bell}
+                    >
+                      Manage Browser Push Notifications
                     </Button>
                   </div>
                 </div>
@@ -681,6 +685,10 @@ const Settings = () => {
           </div>
         </div>
       </div>
+
+      {showPushSettings && (
+        <PushNotificationSettings onClose={() => setShowPushSettings(false)} />
+      )}
     </div>
   );
 };

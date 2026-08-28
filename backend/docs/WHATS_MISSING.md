@@ -64,7 +64,6 @@
 - Setting up services → THIS FILE (Part 3)
 - Deploying to server → `DEPLOYMENT_GUIDE.md`
 - Understanding architecture → `docs/HLD.md`
-- Interview preparation → `docs/INTERVIEW_PREP.md`
 
 ---
 
@@ -113,9 +112,6 @@ These features are **coded and integrated** but require external service setup t
 
 | Item | File | What's Incomplete | Priority |
 |------|------|-------------------|----------|
-| **EventForm.jsx** still uses MUI | `Components/Events/EventForm.jsx` | Should be rewritten with custom UI components to eliminate 222KB MUI chunk | Medium |
-| **Checkout.jsx** (dead code) | `Components/General/Checkout.jsx` | Old checkout component, replaced by CheckoutButton. Should be deleted. | Low |
-| **Navbar.jsx** (dead code) | `Components/Navbar/Navbar.jsx` | Old navbar, replaced by Header.jsx. Should be deleted. | Low |
 | **EventCard "like" button** | `Components/Events/EventCard.jsx` | Toggles local state only — doesn't persist to API. Should call bookmark endpoint. | Medium |
 | **Admin dashboard** | `Pages/AdminDashboard.jsx` | Basic stats only. Missing: user management, event moderation, reports. | Low |
 | **Internationalization** | `contexts/I18nContext.jsx` | Context exists but no actual translations loaded. English-only. | Low |
@@ -308,7 +304,7 @@ git clone https://github.com/YOUR_USER/eazy-event.git
 cd eazy-event
 
 # 2. Backend setup
-cd backend/eazy_event_server-master
+cd backend
 cp .env.example .env.development
 # Edit .env.development with your Mailtrap + Atlas credentials (minimum)
 npm install
@@ -321,7 +317,7 @@ npm run dev
 # → Server running on http://localhost:5000
 
 # 5. Frontend setup (new terminal)
-cd frontend/Eazy_Event-main
+cd frontend
 echo "VITE_SERVER_URL=http://localhost:5000" > .env
 npm install
 npm run dev
@@ -351,7 +347,7 @@ git clone https://github.com/YOUR_USER/eazy-event.git
 cd eazy-event
 
 # 3. Configure production env
-cp backend/eazy_event_server-master/.env.example backend/eazy_event_server-master/.env.production
+cp backend/.env.example backend/.env.production
 # Edit with REAL production values:
 #   - MONGO_URI (Atlas prod cluster)
 #   - JWT_SECRET (openssl rand -base64 64)
@@ -362,8 +358,8 @@ cp backend/eazy_event_server-master/.env.example backend/eazy_event_server-maste
 #   - GOOGLE_GEMINI_API_KEY
 
 # 4. Frontend env
-echo "VITE_SERVER_URL=https://api.yourdomain.com" > frontend/Eazy_Event-main/.env
-echo "VITE_STRIPE_PUBLISHABLE_KEY=pk_live_..." >> frontend/Eazy_Event-main/.env
+echo "VITE_SERVER_URL=https://api.yourdomain.com" > frontend/.env
+echo "VITE_STRIPE_PUBLISHABLE_KEY=pk_live_..." >> frontend/.env
 
 # 5. Deploy
 docker compose -f docker-compose.prod.yml up -d --build

@@ -5,6 +5,7 @@
 
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
+const logger = require('../utils/logger');
 
 class CommunicationConfig {
   constructor() {
@@ -64,11 +65,12 @@ class CommunicationConfig {
       this.emailTransporter = nodemailer.createTransport(this.emailConfig);
       
       // Verify connection
-      this.emailTransporter.verify((error, success) => {
+      this.emailTransporter.verify((error, _success) => {
         if (error) {
           console.error('Email transporter verification failed:', error);
         } else {
-          }
+          logger.info('Email transporter verified successfully');
+        }
       });
     }
     return this.emailTransporter;

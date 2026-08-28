@@ -3,7 +3,7 @@ const { body } = require('express-validator');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { handleValidationErrors, commonValidations } = require("../utils/validationUtils");
 const ChatService = require('../services/chatService');
-const { ChatRoom, Message } = require('../models/chat');
+const { ChatRoom } = require('../models/chat');
 
 const router = express.Router();
 

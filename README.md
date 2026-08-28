@@ -10,7 +10,7 @@ This document tells you **what to do, in what order, and which doc to read** for
 
 ```bash
 # 1. Backend
-cd backend/eazy_event_server-master
+cd backend
 cp .env.example .env.development
 # Edit .env.development → fill MONGO_URI, SMTP_*, JWT_SECRET, etc.
 npm install
@@ -18,7 +18,7 @@ npm run seed        # Seeds demo data for local testing
 npm run dev         # Starts on http://localhost:5000
 
 # 2. Frontend (new terminal)
-cd frontend/Eazy_Event-main
+cd frontend
 echo "VITE_SERVER_URL=http://localhost:5000" > .env
 npm install
 npm run dev         # Starts on http://localhost:5174
@@ -56,7 +56,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ## 🧪 Testing Commands
 
 ```bash
-cd backend/eazy_event_server-master
+cd backend
 
 # API Integration Tests (43 assertions, requires running server)
 npm run test:integration

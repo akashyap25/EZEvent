@@ -194,22 +194,21 @@ Real-time chat for events. Only event owner, collaborators, and registered atten
 
 ```
 backend/
-└── eazy_event_server-master/
-    ├── config/           # Configuration (security, passport, swagger, DB indexes)
-    ├── controllers/      # Route handlers (business logic)
-    ├── db/               # Database connection
-    ├── middlewares/      # Auth, validation, rate limiting, security
-    ├── models/           # Mongoose schemas (15+ models)
-    ├── routes/           # API routes (RESTful, versioned)
-    ├── services/         # Business logic services (AI, email, cache, etc.)
-    ├── socket/           # WebSocket handlers (chat)
-    ├── scripts/          # DB seeding, utilities
-    ├── tests/            # Jest test suites
-    ├── utils/            # Shared utilities (logger, validation, errors)
-    ├── app.js            # Express app entry
-    ├── Dockerfile        # Multi-stage Docker build
-    ├── docker-compose.yml # Full stack orchestration
-    └── package.json
+├── config/           # Configuration (security, passport, swagger, DB indexes)
+├── controllers/      # Route handlers (business logic)
+├── db/               # Database connection
+├── middlewares/      # Auth, validation, rate limiting, security
+├── models/           # Mongoose schemas (15+ models)
+├── routes/           # API routes (RESTful, versioned)
+├── services/         # Business logic services (AI, email, cache, etc.)
+├── socket/           # WebSocket handlers (chat)
+├── scripts/          # DB seeding, utilities
+├── tests/            # Jest test suites
+├── utils/            # Shared utilities (logger, validation, errors)
+├── app.js            # Express app entry
+├── Dockerfile        # Multi-stage Docker build
+├── docker-compose.yml # Full stack orchestration
+└── package.json
 ```
 
 ## Testing

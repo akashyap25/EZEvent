@@ -54,11 +54,11 @@ git clone https://github.com/YOUR_USERNAME/eazy-event.git
 cd eazy-event
 
 # Backend
-cd backend/eazy_event_server-master
+cd backend
 npm install
 
 # Frontend
-cd ../../frontend/Eazy_Event-main
+cd ../../frontend
 npm install
 ```
 
@@ -67,7 +67,7 @@ npm install
 Copy `.env.example` and fill in your values:
 
 ```bash
-cd backend/eazy_event_server-master
+cd backend
 cp .env.example .env.development
 ```
 
@@ -78,11 +78,11 @@ Edit `.env.development` with your values (see [Environment Variables Reference](
 **Option A — Manual (two terminals):**
 ```bash
 # Terminal 1: Backend
-cd backend/eazy_event_server-master
+cd backend
 npm run dev
 
 # Terminal 2: Frontend
-cd frontend/Eazy_Event-main
+cd frontend
 npm run dev
 ```
 
@@ -93,7 +93,7 @@ docker compose -f docker-compose.dev.yml up
 
 ### Step 4: Seed Demo Data
 ```bash
-cd backend/eazy_event_server-master
+cd backend
 npm run seed
 ```
 
@@ -324,16 +324,16 @@ git push origin feature/my-feature
 node -e "JSON.parse(require('fs').readFileSync('package.json'))"
 
 # Gate 2 equivalent:
-cd backend/eazy_event_server-master
+cd backend
 find . -name "*.js" -not -path "./node_modules/*" -exec node -c {} \;
 npm audit --production --audit-level=high
 
 # Gate 3 equivalent:
-cd frontend/Eazy_Event-main
+cd frontend
 npm run build
 
 # Gate 4 equivalent:
-cd backend/eazy_event_server-master
+cd backend
 npm run test:integration    # 43 API tests
 node tests/security-audit.js  # 16 OWASP checks
 ```
@@ -382,7 +382,7 @@ git clone https://github.com/YOUR_USERNAME/eazy-event.git
 cd eazy-event
 
 # Create production env file
-cp backend/eazy_event_server-master/.env.example backend/eazy_event_server-master/.env.production
+cp backend/.env.example backend/.env.production
 # Edit with production values (see reference above)
 
 # Deploy
@@ -424,7 +424,7 @@ az webapp config appsettings set --resource-group ezevent-rg --name ezevent-api 
   # ... other env vars
 
 # Deploy frontend (Static Web Apps)
-az staticwebapp create --name ezevent-web --resource-group ezevent-rg --source ./frontend/Eazy_Event-main/dist
+az staticwebapp create --name ezevent-web --resource-group ezevent-rg --source ./frontend/dist
 ```
 
 ### Option B: AWS (EC2 + Docker)
@@ -614,7 +614,7 @@ eazy-event/
 ├── .github/workflows/ci.yml    ← CI/CD pipeline
 ├── docker-compose.dev.yml      ← Local Docker stack
 ├── docker-compose.prod.yml     ← Production Docker
-├── backend/eazy_event_server-master/
+├── backend/
 │   ├── .env.example            ← Template (committed to git)
 │   ├── .env.development        ← Local dev secrets (NOT in git)
 │   ├── .env.production         ← Prod secrets (NOT in git)
@@ -622,7 +622,7 @@ eazy-event/
 │   ├── app.js                  ← Auto-loads correct .env file
 │   └── tests/
 │       └── integration-runner.js  ← 43-test integration suite
-└── frontend/Eazy_Event-main/
+└── frontend/
     ├── .env                    ← VITE_SERVER_URL, VITE_STRIPE_KEY
     └── Dockerfile              ← Multi-stage build + Nginx
 ```

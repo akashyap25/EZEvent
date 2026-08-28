@@ -1,7 +1,6 @@
 const Event = require('../models/event');
 const Order = require('../models/order');
 const { queryOptimizer } = require('../utils/queryOptimizer');
-const { createCacheMiddleware, cacheKeyGenerators } = require('../middlewares/cacheMiddleware');
 const { tryCatch, errorResponses } = require('../utils/errorUtils');
 
 const createEvent = tryCatch(async (req, res) => {

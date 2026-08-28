@@ -1,36 +1,40 @@
 /**
  * Observability & APM Module
- * 
+ *
  * Provides:
- * - Error tracking (Sentry)
+ * - Error tracking (optional Sentry or local console logging)
  * - Request tracing
  * - Performance monitoring
  * - Structured logging
  * - Health metrics export
- * 
+ *
  * Configuration:
- *   SENTRY_DSN=https://xxx@sentry.io/xxx  (enables Sentry)
+ *   SENTRY_DSN=https://xxx@sentry.io/xxx  (optional, enables Sentry)
  *   LOG_LEVEL=info|debug|warn|error
  */
 
-const Sentry = require('@sentry/node');
+let Sentry = null;
+
+if (process.env.SENTRY_DSN) {
+  Sentry = require('@sentry/node');
+}
+
+const logger = require('../utils/logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sentryEnabled = !!process.env.SENTRY_DSN;
 
-// ─── Sentry Initialization ──────────────────────────────────────────────
+// ─── Optional Sentry Initialization ─────────────────────────────────────
 
 if (sentryEnabled) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.NODE_ENV || 'development',
     release: process.env.APP_VERSION || '1.0.0',
-    
-    // Performance monitoring
-    tracesSampleRate: isProduction ? 0.1 : 1.0, // 10% in prod, 100% in dev
+
+    tracesSampleRate: isProduction ? 0.1 : 1.0,
     profilesSampleRate: isProduction ? 0.1 : 0,
-    
-    // Filter out noisy errors
+
     ignoreErrors: [
       'ECONNRESET',
       'EPIPE',
@@ -40,12 +44,9 @@ if (sentryEnabled) {
       'Rate limit exceeded'
     ],
 
-    // Don't send PII
     sendDefaultPii: false,
-    
-    // Before sending, scrub sensitive data
+
     beforeSend(event) {
-      // Remove sensitive headers
       if (event.request?.headers) {
         delete event.request.headers['authorization'];
         delete event.request.headers['cookie'];
@@ -53,9 +54,9 @@ if (sentryEnabled) {
       return event;
     }
   });
-  console.log(`Sentry initialized (env: ${process.env.NODE_ENV}, traces: ${isProduction ? '10%' : '100%'})`);
+  logger.info(`Sentry initialized (env: ${process.env.NODE_ENV}, traces: ${isProduction ? '10%' : '100%'})`);
 } else {
-  console.log('Sentry not configured. Set SENTRY_DSN to enable error tracking.');
+  logger.info('Sentry not configured. Using local console/error logging for development.');
 }
 
 // ─── Express Middleware ──────────────────────────────────────────────────
@@ -77,7 +78,7 @@ const requestTracer = (req, res, next) => {
     
     // Log slow requests
     if (duration > 1000) {
-      console.warn(`[SLOW] ${req.method} ${req.path} took ${duration.toFixed(0)}ms (trace: ${traceId})`);
+      logger.warn(`[SLOW] ${req.method} ${req.path} took ${duration.toFixed(0)}ms (trace: ${traceId})`);
     }
     
     // Record metrics
@@ -175,12 +176,15 @@ const metrics = new MetricsCollector();
  */
 const captureError = (error, context = {}) => {
   metrics.recordError(error, context);
-  
+
+  if (sentryEnabled && Sentry) {
+    Sentry.captureException(error, { extra: context });
+  }
+
   if (isProduction) {
-    // In production, don't log full stack to stdout (Sentry has it)
-    console.error(`[ERROR] ${error.message} (${context.source || 'unknown'})`);
+    logger.error(`[ERROR] ${error.message} (${context.source || 'unknown'})`);
   } else {
-    console.error(`[ERROR] ${error.message}`, context);
+    logger.error(`[ERROR] ${error.message}`, context);
   }
 };
 
@@ -188,14 +192,14 @@ const captureError = (error, context = {}) => {
  * Capture a message/event for tracking
  */
 const captureMessage = (message, level = 'info', context = {}) => {
-  if (sentryEnabled) {
+  if (sentryEnabled && Sentry) {
     Sentry.captureMessage(message, { level, extra: context });
   }
 };
 
 // ─── Global Error Handlers ──────────────────────────────────────────────
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason, _promise) => {
   captureError(reason instanceof Error ? reason : new Error(String(reason)), {
     source: 'unhandledRejection'
   });
@@ -203,8 +207,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (error) => {
   captureError(error, { source: 'uncaughtException' });
-  // Give Sentry time to send before crashing
-  if (sentryEnabled) {
+  if (sentryEnabled && Sentry) {
     Sentry.close(2000).then(() => process.exit(1));
   } else {
     process.exit(1);

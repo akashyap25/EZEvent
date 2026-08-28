@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Star, 
   ThumbsUp, 
   Flag, 
   Send, 
   User,
-  MessageSquare,
-  TrendingUp
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { SERVER_URL } from '../../Utils/Constants';
@@ -14,7 +13,7 @@ import Card from '../UI/Card';
 import Button from '../UI/Button';
 
 const EventReviews = ({ eventId, isOrganizer }) => {
-  const { user, accessToken, isAuthenticated } = useAuth();
+  const { accessToken, isAuthenticated } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -28,6 +27,7 @@ const EventReviews = ({ eventId, isOrganizer }) => {
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
   const fetchReviews = async () => {

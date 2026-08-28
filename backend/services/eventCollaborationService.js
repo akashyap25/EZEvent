@@ -1,6 +1,5 @@
 const Event = require('../models/event');
 const User = require('../models/user');
-const { v4: uuidv4 } = require('uuid');
 
 class EventCollaborationService {
   /**
@@ -76,7 +75,7 @@ class EventCollaborationService {
    * @param {String} removedBy - User ID who is removing the co-organizer
    * @returns {Promise<Object>} Remove result
    */
-  static async removeCoOrganizer(eventId, userId, removedBy) {
+  static async removeCoOrganizer(eventId, userId, _removedBy) {
     try {
       const event = await Event.findById(eventId);
       if (!event) {

@@ -187,8 +187,6 @@ const analyzeReviews = async (req, res) => {
 
 const getRecommendations = async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    
     // Get user preferences (placeholder - would come from user profile)
     const userPreferences = {
       interests: req.body.interests || [],

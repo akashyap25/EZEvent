@@ -1,5 +1,4 @@
 const Event = require('../models/event');
-const User = require('../models/user');
 const EmailService = require('./emailService');
 const logger = require('../utils/logger');
 

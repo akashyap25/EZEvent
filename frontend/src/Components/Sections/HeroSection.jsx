@@ -1,5 +1,3 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Play, CheckCircle, Star } from 'lucide-react';
 import Button from '../UI/Button';
 import heroImg from '../../assets/images/hero.png';

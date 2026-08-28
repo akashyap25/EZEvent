@@ -11,10 +11,8 @@ let token = null;
 let userId = null;
 let eventId = null;
 let categoryId = null;
-let orgId = null;
-let ticketId = null;
 
-let pass = 0, fail = 0, skip = 0;
+let pass = 0, fail = 0;
 const failures = [];
 const groups = {};
 let currentGroup = '';
@@ -277,7 +275,6 @@ async function run() {
       name: `TestOrg_${Date.now()}`, description: 'Integration test org'
     });
     assertIncludes([200, 201, 400], r.status); // 400 if org limit reached
-    orgId = r.data.organization?._id || r.data.data?._id;
   });
 
   // ═══════ 10. SUPPORT ═══════
@@ -295,7 +292,6 @@ async function run() {
       category: 'general', priority: 'low'
     });
     assertIncludes([200, 201], r.status);
-    ticketId = r.data.data?.ticket?._id;
   });
 
   // ═══════ 11. SEARCH ═══════

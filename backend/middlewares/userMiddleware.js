@@ -22,8 +22,9 @@ const ensureUserExists = async (req, res, next) => {
       };
 
       user = await User.create(userData);
-      } else {
-      }
+    } else {
+      // User already exists — nothing to do
+    }
 
     // Attach user to request for use in other middleware/controllers
     req.user = user;

@@ -246,7 +246,7 @@ git clone https://github.com/YOUR_USER/eazy-event.git
 cd eazy-event
 
 # Backend setup
-cd backend/eazy_event_server-master
+cd backend
 cp .env.example .env.production
 
 # Edit with production values:
@@ -291,7 +291,7 @@ pm2 save
 pm2 startup
 
 # Build frontend
-cd ../../frontend/Eazy_Event-main
+cd ../../frontend
 echo "VITE_SERVER_URL=https://api.yourdomain.com" > .env
 echo "VITE_STRIPE_PUBLISHABLE_KEY=pk_live_..." >> .env
 npm ci
@@ -341,15 +341,15 @@ pipeline {
     stages {
         stage('Gate 1: Validate') {
             steps {
-                sh 'node -e "JSON.parse(require(\"fs\").readFileSync(\"backend/eazy_event_server-master/package.json\"))"'
-                sh 'node -e "JSON.parse(require(\"fs\").readFileSync(\"frontend/Eazy_Event-main/package.json\"))"'
+                sh 'node -e "JSON.parse(require(\"fs\").readFileSync(\"backend/package.json\"))"'
+                sh 'node -e "JSON.parse(require(\"fs\").readFileSync(\"frontend/package.json\"))"'
                 echo '✓ Project structure valid'
             }
         }
         
         stage('Gate 2: Backend Lint') {
             steps {
-                dir('backend/eazy_event_server-master') {
+                dir('backend') {
                     sh 'npm ci'
                     sh '''
                         errors=0
@@ -369,7 +369,7 @@ pipeline {
         
         stage('Gate 3: Frontend Build') {
             steps {
-                dir('frontend/Eazy_Event-main') {
+                dir('frontend') {
                     sh 'npm ci'
                     withEnv(['VITE_SERVER_URL=https://api.yourdomain.com']) {
                         sh 'npm run build'
@@ -381,7 +381,7 @@ pipeline {
         
         stage('Gate 4: Integration Tests') {
             steps {
-                dir('backend/eazy_event_server-master') {
+                dir('backend') {
                     sh '''
                         export NODE_ENV=test
                         export MONGO_URI=mongodb://localhost:27017/ezevent_test
@@ -406,11 +406,11 @@ pipeline {
                 sh """
                     cd ${DEPLOY_DIR}
                     git pull origin ${env.BRANCH_NAME}
-                    cd backend/eazy_event_server-master
+                    cd backend
                     npm ci --production
                     pm2 restart ezevent-api
                     
-                    cd ../../frontend/Eazy_Event-main
+                    cd ../../frontend
                     npm ci
                     npm run build
                     sudo cp -r dist/* /var/www/ezevent/
@@ -652,7 +652,7 @@ pm2 status
 pm2 logs ezevent-api --lines 50
 
 # Manual deploy
-cd /home/ubuntu/eazy-event && git pull && cd backend/eazy_event_server-master && npm ci --production && pm2 restart ezevent-api
+cd /home/ubuntu/eazy-event && git pull && cd backend && npm ci --production && pm2 restart ezevent-api
 
 # Check Nginx
 sudo nginx -t && sudo systemctl reload nginx
@@ -667,7 +667,7 @@ redis-cli ping  # → PONG
 sudo certbot renew --dry-run
 
 # Run tests against production
-cd /home/ubuntu/eazy-event/backend/eazy_event_server-master
+cd /home/ubuntu/eazy-event/backend
 LOAD_TEST_URL=https://api.yourdomain.com node tests/security-audit.js
 LOAD_TEST_URL=https://api.yourdomain.com npm run loadtest
 ```

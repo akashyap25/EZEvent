@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Sparkles, Loader2, RefreshCw, Check, X } from 'lucide-react';
 import { SERVER_URL } from '../../Utils/Constants';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, X as CloseIcon } from 'lucide-react';
 import Input from '../UI/Input';

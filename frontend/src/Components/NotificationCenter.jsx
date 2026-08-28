@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Bell, 
   X, 
   Check, 
-  CheckCheck, 
   Calendar, 
   MessageCircle, 
   Users, 
@@ -32,6 +31,7 @@ const NotificationCenter = () => {
       fetchNotifications();
       checkPushPermission();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {

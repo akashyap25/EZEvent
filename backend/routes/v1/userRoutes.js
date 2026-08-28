@@ -11,7 +11,7 @@ const User = require('../../models/user');
 const Token = require('../../models/Token');
 const PasswordReset = require('../../models/PasswordReset');
 const EmailService = require('../../services/emailService');
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 const { 
   generateTokenPair, 
   refreshAccessToken, 

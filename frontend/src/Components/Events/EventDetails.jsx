@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import apiService from '../../Utils/apiService';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import formatDateTime from '../../Utils/FormatDate';
-import { SERVER_URL } from '../../Utils/Constants';
 import { useAuth } from "../../contexts/AuthContext";
 import getUser from '../../Utils/GetUser';
 import Card from '../UI/Card';
@@ -13,12 +12,9 @@ import {
   MapPin, 
   Clock, 
   Users, 
-  Star, 
   Edit, 
-  Trash2, 
   Heart,
   Share2,
-  Eye,
   ArrowLeft,
   User,
   Tag,
@@ -27,18 +23,17 @@ import {
   AlertCircle,
   XCircle,
   Play,
-  Pause,
-  Download,
   Bookmark,
   MessageCircle,
-  ThumbsUp,
   Share,
   Copy,
   Flag,
   BarChart3,
   Calendar as CalendarIcon,
   UserPlus,
-  Repeat
+  Repeat,
+  QrCode,
+  Mail
 } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
@@ -53,6 +48,8 @@ const EventReviews = lazy(() => import('./EventReviews'));
 const EventCard = lazy(() => import('./EventCard'));
 const CheckoutButton = lazy(() => import('../General/CheckoutButton'));
 const WaitlistButton = lazy(() => import('./WaitlistButton'));
+const QRScanner = lazy(() => import('./QRScanner'));
+const AttendeeMessaging = lazy(() => import('./AttendeeMessaging'));
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -69,6 +66,8 @@ const EventDetails = () => {
   const [showChat, setShowChat] = useState(false);
   const [showSocialShare, setShowSocialShare] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const [showMessaging, setShowMessaging] = useState(false);
   const [copied, setCopied] = useState(false);
   const { user: currentUser, isAuthenticated } = useAuth(); 
   const [user, setUser] = useState(null);
@@ -211,7 +210,7 @@ const EventDetails = () => {
         <Card className="text-center p-8 max-w-md">
           <XCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Event Not Found</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">The event you're looking for doesn't exist.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">The event you&apos;re looking for doesn&apos;t exist.</p>
           <Button onClick={() => navigate('/')}>
             Go Home
           </Button>
@@ -472,6 +471,24 @@ const EventDetails = () => {
                     >
                       Manage Team
                     </Button>
+
+                    <Button
+                      variant="outline"
+                      fullWidth
+                      icon={QrCode}
+                      onClick={() => setShowCheckIn(true)}
+                    >
+                      Check-In Scanner
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      fullWidth
+                      icon={Mail}
+                      onClick={() => setShowMessaging(true)}
+                    >
+                      Message Attendees
+                    </Button>
                   </div>
                 )}
                 
@@ -673,6 +690,52 @@ const EventDetails = () => {
               </div>
               <Suspense fallback={<div className="p-4 text-center">Loading...</div>}>
                 <EventCollaboration eventId={event._id} />
+              </Suspense>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCheckIn && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto my-8">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Check-In Scanner</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCheckIn(false)}
+                  icon={XCircle}
+                >
+                  Close
+                </Button>
+              </div>
+              <Suspense fallback={<div className="p-4 text-center">Loading...</div>}>
+                <QRScanner eventId={event._id} />
+              </Suspense>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showMessaging && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto my-8">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Message Attendees</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowMessaging(false)}
+                  icon={XCircle}
+                >
+                  Close
+                </Button>
+              </div>
+              <Suspense fallback={<div className="p-4 text-center">Loading...</div>}>
+                <AttendeeMessaging eventId={event._id} />
               </Suspense>
             </div>
           </div>

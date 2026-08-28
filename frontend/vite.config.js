@@ -37,8 +37,6 @@ export default defineConfig(({ mode }) => {
           manualChunks: (id) => {
             // Separate heavy vendor libraries
             if (id.includes('node_modules')) {
-              // MUI + Emotion — removed from project
-              if (id.includes('@mui') || id.includes('@emotion')) return 'legacy-vendor';
               // React core (always needed)
               if (id.includes('react-dom') || id.includes('scheduler')) return 'react-vendor';
               if (id.includes('react-router')) return 'router';

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
-const { requireOrganization, requireOrgRole } = require('../middlewares/organizationMiddleware');
 
 const PLANS = {
   free: { name: 'Free', price: 0, maxEvents: 10, maxMembers: 5, features: ['Basic event creation', '5 team members', 'Email support'] },

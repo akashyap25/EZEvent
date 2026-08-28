@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from '../../Utils/Constants';
-import { Upload, X, Image as ImageIcon, Loader } from 'lucide-react';
+import { Upload, X, Loader } from 'lucide-react';
 
 const ImageUpload = ({ onUploadComplete, currentImage, className = '' }) => {
   const [uploading, setUploading] = useState(false);

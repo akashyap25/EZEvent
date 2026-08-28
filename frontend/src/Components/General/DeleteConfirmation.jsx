@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Trash2, Loader } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import Button from '../UI/Button';
 import Dialog from '../UI/Dialog';
 import deleteEvent from '../../Utils/DeleteEvent';

@@ -1,5 +1,4 @@
 const EventTemplate = require('../models/eventTemplate');
-const Category = require('../models/category');
 
 class EventTemplateService {
   /**

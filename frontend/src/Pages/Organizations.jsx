@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect } from 'react';
 import apiService from '../Utils/apiService';
 import Card from '../Components/UI/Card';
 import Button from '../Components/UI/Button';
 import LoadingSpinner from '../Components/UI/LoadingSpinner';
 import { 
-  Building2, Users, Plus, Settings, Mail, 
+  Building2, Users, Plus, Mail, 
   Crown, Shield, User, Trash2, UserPlus, X, Check
 } from 'lucide-react';
 
 const Organizations = () => {
-  const { user } = useAuth();
   const [organizations, setOrganizations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -44,7 +42,7 @@ const Organizations = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await apiService.post('/api/organizations', createForm);
+      await apiService.post('/api/organizations', createForm);
       setShowCreate(false);
       setCreateForm({ name: '', description: '' });
       setSuccess('Organization created successfully!');

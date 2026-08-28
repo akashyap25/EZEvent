@@ -48,7 +48,7 @@ const webhookController = async (req, res) => {
     const eventType = evt.type;
 
     switch (eventType) {
-      case 'user.created':
+      case 'user.created': {
         // Create the user with the necessary attributes
         const newUser = {
           clerkId: id,
@@ -70,8 +70,9 @@ const webhookController = async (req, res) => {
           });
         }
         break;
+      }
 
-      case 'user.updated':
+      case 'user.updated': {
         // Update the user with the necessary attributes
         const updatedUser = {
           firstName: attributes.first_name,
@@ -92,6 +93,7 @@ const webhookController = async (req, res) => {
           });
         }
         break;
+      }
 
       case 'user.deleted':
         try {

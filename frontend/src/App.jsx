@@ -1,4 +1,3 @@
-import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import './index.css';
 import { 
@@ -28,8 +27,6 @@ import Organizations from './Pages/Organizations';
 import AdminDashboard from './Pages/AdminDashboard';
 import Layout from './Components/Layout';
 import ErrorBoundary from './Components/ErrorBoundary';
-import ScrollToTop from './Components/ScrollToTop';
-import LoadingSpinner from './Components/LoadingSpinner';
 import ProtectedRoute from './Components/ProtectedRoute';
 import Dashboard from './Components/General/Dashboard';
 import Bookmarks from './Components/General/Bookmarks';

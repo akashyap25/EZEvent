@@ -165,7 +165,7 @@ class RecurringEventService {
       }
       
       // Remove fields that shouldn't be updated
-      const { eventId, ...updateFields } = updateData;
+      const { eventId: _eventId, ...updateFields } = updateData;
       
       const result = await Event.updateMany(query, updateFields);
       
