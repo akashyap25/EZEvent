@@ -235,81 +235,36 @@ const CreateEvent = ({ editEventId } = {}) => {
     }
     
     setUploadingImage(true);
-    
-    // Check if Cloudinary is configured
-    const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-    const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-    
-    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
-      // Fallback: Use local preview without upload
-      console.warn('Cloudinary not configured, using local preview only');
-      const localUrl = URL.createObjectURL(file);
-      setImagePreview(localUrl);
-      setFormData(prev => ({ ...prev, imageUrl: localUrl }));
-      setUploadingImage(false);
-      
-      Swal.fire({
-        title: 'Image Preview Only',
-        text: 'Cloudinary not configured. Image will be previewed locally but not uploaded.',
-        icon: 'warning',
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
-    
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", cloudinaryUploadPreset);
+
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
 
     try {
-      
-      // Use native fetch API to avoid axios CORS issues
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-          // Don't set Content-Type header, let browser set it with boundary
-        }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await apiService.post('/api/upload', uploadFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      const uploadedUrl = response?.data?.url;
+      if (!uploadedUrl) {
+        throw new Error('No URL returned from upload');
       }
-      
-      const data = await response.json();
-      
-      if (data.secure_url) {
-        // Clean up previous image if it exists and is from Cloudinary
-        if (currentImageUrl && currentImageUrl.startsWith('https://res.cloudinary.com/')) {
-          // Note: In a production app, you might want to delete the old image from Cloudinary
-          // For now, we'll just track the new URL
-        }
-        
-        setImagePreview(data.secure_url);
-        setCurrentImageUrl(data.secure_url);
-        setFormData(prev => ({ ...prev, imageUrl: data.secure_url }));
-        Swal.fire('Success', 'Image uploaded successfully!', 'success');
-      } else {
-        throw new Error('No secure URL returned from Cloudinary');
-      }
+
+      setImagePreview(uploadedUrl);
+      setCurrentImageUrl(uploadedUrl);
+      setFormData(prev => ({ ...prev, imageUrl: uploadedUrl }));
+      Swal.fire('Success', 'Image uploaded successfully!', 'success');
     } catch (error) {
       console.error("Error uploading image:", error);
-      
-      // Fallback to local preview
+
+      // Fallback to local preview so the user can still continue the wizard
       const localUrl = URL.createObjectURL(file);
       setImagePreview(localUrl);
       setCurrentImageUrl(localUrl);
       setFormData(prev => ({ ...prev, imageUrl: localUrl }));
-      
-      let errorMessage = 'Failed to upload to Cloudinary';
-      if (error.message) {
-        errorMessage = error.message;
-      }
-      
+
       Swal.fire({
         title: 'Upload Warning',
-        text: `${errorMessage}. Using local preview instead.`,
+        text: `${error.message || 'Failed to upload image'}. Using local preview instead.`,
         icon: 'warning',
         confirmButtonText: 'OK'
       });
