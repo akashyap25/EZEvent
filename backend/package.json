@@ -114,9 +114,6 @@
     "forceExit": true,
     "clearMocks": true,
     "resetMocks": true,
-    "restoreMocks": true,
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@exodus|html-encoding-sniffer)/)"
-    ]
+    "restoreMocks": true
   }
 }
