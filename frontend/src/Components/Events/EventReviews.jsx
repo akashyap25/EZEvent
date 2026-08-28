@@ -58,16 +58,13 @@ const EventReviews = ({ eventId, isOrganizer }) => {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`${SERVER_URL}/api/reviews`, {
+      const response = await fetch(`${SERVER_URL}/api/reviews/event/${eventId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({
-          ...newReview,
-          event: eventId
-        })
+        body: JSON.stringify(newReview)
       });
       const data = await response.json();
       if (data.success && data.data) {

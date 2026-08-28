@@ -106,7 +106,7 @@ organizationSchema.index({ name: 'text', description: 'text' });
 
 // Generate slug from name
 organizationSchema.pre('validate', function(next) {
-  if (this.isModified('name') && !this.slug) {
+  if (this.name && this.isModified('name') && !this.slug) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')

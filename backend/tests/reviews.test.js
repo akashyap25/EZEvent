@@ -69,12 +69,12 @@ describe('Reviews API', () => {
   describe('POST /api/reviews', () => {
     it('should create a review for a past event', async () => {
       const res = await request(app)
-        .post('/api/reviews')
+        .post(`/api/reviews/event/${eventId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          eventId: eventId,
           rating: 5,
-          comment: 'Excellent event!'
+          title: 'Great event',
+          review: 'Excellent event!'
         });
       expect([200, 201, 400]).toContain(res.status);
     });

@@ -50,7 +50,7 @@ describe('Bookmarks API', () => {
         category: categoryId,
         isFree: true, price: '0', location: 'Test'
       });
-    eventId = eventRes.body.event?._id || eventRes.body.data?._id;
+    eventId = eventRes.body.eventId || eventRes.body.event?._id || eventRes.body.data?._id;
   });
 
   afterAll(async () => {

@@ -21,7 +21,7 @@ const createReview = async (req, res) => {
     // Check if user attended the event
     const order = await Order.findOne({
       event: eventId,
-      buyer: req.user.userId,
+      buyer: req.auth.userId,
       status: 'completed'
     });
     
@@ -30,7 +30,7 @@ const createReview = async (req, res) => {
     // Check for existing review
     const existingReview = await Review.findOne({
       event: eventId,
-      user: req.user.userId,
+      user: req.auth.userId,
       isDeleted: false
     });
     
@@ -40,7 +40,7 @@ const createReview = async (req, res) => {
     
     const newReview = await Review.create({
       event: eventId,
-      user: req.user.userId,
+      user: req.auth.userId,
       rating,
       title,
       review,
@@ -157,7 +157,7 @@ const updateReview = async (req, res) => {
     
     const existingReview = await Review.findOne({
       _id: req.params.reviewId,
-      user: req.user.userId,
+      user: req.auth.userId,
       isDeleted: false
     });
     
@@ -190,7 +190,7 @@ const deleteReview = async (req, res) => {
     const review = await Review.findOneAndUpdate(
       {
         _id: req.params.reviewId,
-        user: req.user.userId,
+        user: req.auth.userId,
         isDeleted: false
       },
       { isDeleted: true },
@@ -220,7 +220,7 @@ const markHelpful = async (req, res) => {
       return notFound(res, 'Review not found');
     }
     
-    await review.markHelpful(req.user.userId);
+    await review.markHelpful(req.auth.userId);
     
     return success(res, { helpfulCount: review.helpfulCount }, 'Marked as helpful');
   } catch (err) {
@@ -240,7 +240,7 @@ const removeHelpful = async (req, res) => {
       return notFound(res, 'Review not found');
     }
     
-    await review.removeHelpfulVote(req.user.userId);
+    await review.removeHelpfulVote(req.auth.userId);
     
     return success(res, { helpfulCount: review.helpfulCount }, 'Helpful vote removed');
   } catch (err) {
@@ -264,7 +264,7 @@ const reportReview = async (req, res) => {
     
     // Check if already reported by this user
     const alreadyReported = review.reportedBy.some(
-      r => r.user.toString() === req.user.userId.toString()
+      r => r.user.toString() === req.auth.userId.toString()
     );
     
     if (alreadyReported) {
@@ -272,7 +272,7 @@ const reportReview = async (req, res) => {
     }
     
     review.reportedBy.push({
-      user: req.user.userId,
+      user: req.auth.userId,
       reason
     });
     
@@ -302,13 +302,13 @@ const addOrganizerResponse = async (req, res) => {
     }
     
     // Check if user is the event organizer
-    if (review.event.organizer.toString() !== req.user.userId.toString()) {
+    if (review.event.organizer.toString() !== req.auth.userId.toString()) {
       return error(res, 'Only the event organizer can respond to reviews', 403);
     }
     
     review.response = {
       content,
-      respondedBy: req.user.userId,
+      respondedBy: req.auth.userId,
       respondedAt: new Date()
     };
     
@@ -325,7 +325,7 @@ const addOrganizerResponse = async (req, res) => {
 const getMyReviews = async (req, res) => {
   try {
     const reviews = await Review.find({
-      user: req.user.userId,
+      user: req.auth.userId,
       isDeleted: false
     })
       .sort({ createdAt: -1 })

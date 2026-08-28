@@ -45,7 +45,7 @@ describe('Waitlist & Templates API', () => {
         category: cat._id, isFree: true, price: '0', location: 'Test',
         capacity: 1
       });
-    eventId = eventRes.body.event?._id || eventRes.body.data?._id;
+    eventId = eventRes.body.eventId || eventRes.body.event?._id || eventRes.body.data?._id;
   });
 
   afterAll(async () => {

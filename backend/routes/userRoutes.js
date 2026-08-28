@@ -7,7 +7,7 @@ const {
   logout, 
   logoutAllDevices 
 } = require('../middlewares/secureAuth');
-const { csrfProtection, getCSRFToken } = require('../middlewares/csrfProtection');
+const { getCSRFToken } = require('../middlewares/csrfProtection');
 const { 
   authRateLimit, 
   passwordResetRateLimit, 
@@ -641,7 +641,6 @@ router.get('/me', authenticateToken, requireAuth, (req, res) => {
 router.put('/:id/password', 
   authenticateToken, 
   requireAuth, 
-  csrfProtection, 
   commonValidations.mongoId('id'),
   validatePasswordChange, 
   handleValidationErrors,

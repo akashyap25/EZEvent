@@ -107,13 +107,7 @@ const validationSets = {
   // Password change validation
   passwordChange: [
     body('currentPassword').notEmpty().withMessage('Current password is required'),
-    commonValidations.password('newPassword'),
-    body('confirmPassword').custom((value, { req }) => {
-      if (value !== req.body.newPassword) {
-        throw new Error('Passwords do not match');
-      }
-      return true;
-    })
+    commonValidations.password('newPassword')
   ],
 
   // Event creation validation
