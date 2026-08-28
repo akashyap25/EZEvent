@@ -3,7 +3,7 @@
  * Runs against a live server instance (requires backend on port 5000)
  * Usage: npm run test:integration
  * 
- * Tests: 74 assertions across 12 test groups
+ * Tests: 43 assertions across 12 test groups
  */
 
 const BASE = process.env.TEST_BASE_URL || 'http://localhost:5000';
