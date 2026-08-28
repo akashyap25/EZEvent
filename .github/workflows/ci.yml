@@ -17,6 +17,7 @@ jobs:
   backend-checks:
     name: Backend (lint, build, test)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     services:
       mongodb:
@@ -58,7 +59,7 @@ jobs:
         run: npm run lint
 
       - name: Verify app boots (no syntax/wiring errors)
-        run: node -e "require('./app'); console.log('app.js loaded OK');"
+        run: node -e "require('./app'); console.log('app.js loaded OK'); process.exit(0);"
 
       - name: Unit tests
         run: npm test
@@ -66,6 +67,7 @@ jobs:
   frontend-checks:
     name: Frontend (lint, build)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     defaults:
       run:
