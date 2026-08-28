@@ -1,6 +1,7 @@
 const { Webhook } = require('svix'); // Ensure you have the svix package installed
 const dotenv = require('dotenv');
 const axios = require('axios'); // Import axios
+const User = require('../models/user');
 dotenv.config();
 
 const webhookController = async (req, res) => {
@@ -60,8 +61,8 @@ const webhookController = async (req, res) => {
         };
 
         try {
-          // Use axios to send a request to the createUser route
-          await axios.post(`${process.env.SERVER_BASE_URL}/api/users/`, newUser); // Ensure SERVER_BASE_URL is set in your .env
+          // Create user directly (not via a public HTTP self-call, to avoid exposing an unauthenticated user-creation endpoint)
+          await User.create(newUser);
           } catch (error) {
           console.error('Error creating user in MongoDB:', error);
           return res.status(500).json({

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const { getUserById, updateUser, deleteUser } = require('../controllers/userController');
 const { authenticateToken, requireAuth } = require('../middlewares/authMiddleware');
 const { 
   generateTokenPair, 
@@ -817,8 +817,5 @@ router.get('/preferences', authenticateToken, requireAuth, async (req, res) => {
 router.get('/:id', getUserById);
 router.put('/:id', authenticateToken, requireAuth, updateUser);
 router.delete('/:id', authenticateToken, requireAuth, deleteUser);
-
-// Internal endpoint used by the Clerk webhook to create users (see webhookController.js)
-router.post('/', createUser);
 
 module.exports = router;
