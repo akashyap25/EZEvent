@@ -119,15 +119,14 @@ const INDEX_CONFIG = {
 
   // Order model indexes
   Order: [
-    { userId: 1 },
-    { eventId: 1 },
+    { buyer: 1 },
+    { event: 1 },
     { status: 1 },
-    { paymentStatus: 1 },
+    { organizationId: 1 },
     { createdAt: -1 },
-    { userId: 1, status: 1 },
-    { eventId: 1, status: 1 },
-    { paymentStatus: 1, status: 1 },
-    { userId: 1, createdAt: -1 }
+    { buyer: 1, status: 1 },
+    { event: 1, status: 1 },
+    { buyer: 1, createdAt: -1 }
   ],
 
   // EventTemplate model indexes

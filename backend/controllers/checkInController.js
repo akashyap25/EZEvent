@@ -1,7 +1,20 @@
 const CheckIn = require('../models/checkIn');
 const Order = require('../models/order');
+const Event = require('../models/event');
 const qrService = require('../services/qrService');
 const { success, error, notFound, serverError } = require('../utils/responseHandler');
+
+// Shared guard: only the event's organizer may perform organizer-only check-in actions.
+async function assertEventOrganizer(eventId, userId) {
+  const event = await Event.findById(eventId).select('organizer');
+  if (!event) {
+    return { ok: false, status: 404, message: 'Event not found' };
+  }
+  if (event.organizer.toString() !== userId) {
+    return { ok: false, status: 403, message: 'Only the event organizer can perform this action' };
+  }
+  return { ok: true };
+}
 
 const generateTicketQR = async (req, res) => {
   try {
@@ -9,7 +22,7 @@ const generateTicketQR = async (req, res) => {
     
     const order = await Order.findOne({
       _id: orderId,
-      buyer: req.user.userId,
+      buyer: req.auth.userId,
       status: 'completed'
     }).populate('event', 'title startDateTime location');
     
@@ -24,7 +37,7 @@ const generateTicketQR = async (req, res) => {
       const ticketData = {
         eventId: order.event._id.toString(),
         orderId: order._id.toString(),
-        attendeeId: req.user.userId,
+        attendeeId: req.auth.userId,
         ticketType: 'general'
       };
       
@@ -33,36 +46,17 @@ const generateTicketQR = async (req, res) => {
       checkIn = await CheckIn.create({
         event: order.event._id,
         order: order._id,
-        attendee: req.user.userId,
+        attendee: req.auth.userId,
         ticketToken: qr.token,
         ticketType: 'general',
         organizationId: order.event.organizationId
-      });
-    } else {
-      // Regenerate QR with existing token
-      const qr = await qrService.generateQRCode({
-        eventId: order.event._id.toString(),
-        orderId: order._id.toString(),
-        attendeeId: req.user.userId,
-        ticketType: checkIn.ticketType
-      });
-      
-      return success(res, {
-        qrCode: qr.dataUrl,
-        ticketNumber: `TKT-${order._id.toString().slice(-8).toUpperCase()}`,
-        event: {
-          title: order.event.title,
-          date: order.event.startDateTime,
-          location: order.event.location
-        },
-        status: checkIn.status
       });
     }
     
     const qr = await qrService.generateQRCode({
       eventId: order.event._id.toString(),
       orderId: order._id.toString(),
-      attendeeId: req.user.userId,
+      attendeeId: req.auth.userId,
       ticketType: checkIn.ticketType
     });
     
@@ -101,10 +95,15 @@ const scanCheckIn = async (req, res) => {
     const checkIn = await CheckIn.findOne({ 
       ticketToken: token 
     }).populate('attendee', 'firstName lastName email avatar')
-      .populate('event', 'title startDateTime');
+      .populate('event', 'title startDateTime organizer');
     
     if (!checkIn) {
       return notFound(res, 'Ticket not found');
+    }
+    
+    // Only the event's organizer may scan/check in attendees for that event.
+    if (checkIn.event.organizer.toString() !== req.auth.userId) {
+      return error(res, 'Only the event organizer can check in attendees', 403);
     }
     
     if (checkIn.status === 'checked_in') {
@@ -121,7 +120,7 @@ const scanCheckIn = async (req, res) => {
     // Perform check-in
     checkIn.status = 'checked_in';
     checkIn.checkInTime = new Date();
-    checkIn.checkInBy = req.user.userId;
+    checkIn.checkInBy = req.auth.userId;
     checkIn.checkInMethod = 'qr_scan';
     checkIn.deviceInfo = req.headers['user-agent'];
     
@@ -140,6 +139,11 @@ const scanCheckIn = async (req, res) => {
 const manualCheckIn = async (req, res) => {
   try {
     const { eventId, attendeeEmail, notes } = req.body;
+    
+    const authCheck = await assertEventOrganizer(eventId, req.auth.userId);
+    if (!authCheck.ok) {
+      return error(res, authCheck.message, authCheck.status);
+    }
     
     // Find attendee's order for this event
     const order = await Order.findOne({
@@ -177,14 +181,14 @@ const manualCheckIn = async (req, res) => {
         ticketToken: qr.token,
         status: 'checked_in',
         checkInTime: new Date(),
-        checkInBy: req.user.userId,
+        checkInBy: req.auth.userId,
         checkInMethod: 'manual',
         notes
       });
     } else {
       checkIn.status = 'checked_in';
       checkIn.checkInTime = new Date();
-      checkIn.checkInBy = req.user.userId;
+      checkIn.checkInBy = req.auth.userId;
       checkIn.checkInMethod = 'manual';
       checkIn.notes = notes;
       await checkIn.save();
@@ -203,6 +207,11 @@ const getEventCheckIns = async (req, res) => {
   try {
     const { eventId } = req.params;
     const { status, page = 1, limit = 50 } = req.query;
+    
+    const authCheck = await assertEventOrganizer(eventId, req.auth.userId);
+    if (!authCheck.ok) {
+      return error(res, authCheck.message, authCheck.status);
+    }
     
     const query = { event: eventId };
     if (status) query.status = status;
@@ -237,6 +246,11 @@ const getCheckInStats = async (req, res) => {
   try {
     const { eventId } = req.params;
     
+    const authCheck = await assertEventOrganizer(eventId, req.auth.userId);
+    if (!authCheck.ok) {
+      return error(res, authCheck.message, authCheck.status);
+    }
+    
     const stats = await CheckIn.getEventStats(eventId);
     const timeline = await CheckIn.getCheckInTimeline(eventId);
     
@@ -251,13 +265,23 @@ const undoCheckIn = async (req, res) => {
   try {
     const { checkInId } = req.params;
     
+    const existingCheckIn = await CheckIn.findById(checkInId).select('event');
+    if (!existingCheckIn) {
+      return notFound(res, 'Check-in record not found');
+    }
+    
+    const authCheck = await assertEventOrganizer(existingCheckIn.event, req.auth.userId);
+    if (!authCheck.ok) {
+      return error(res, authCheck.message, authCheck.status);
+    }
+    
     const checkIn = await CheckIn.findByIdAndUpdate(
       checkInId,
       {
         status: 'pending',
         checkInTime: null,
         checkInBy: null,
-        notes: `Undone by ${req.user.userId} at ${new Date().toISOString()}`
+        notes: `Undone by ${req.auth.userId} at ${new Date().toISOString()}`
       },
       { new: true }
     ).populate('attendee', 'firstName lastName email');
@@ -276,7 +300,7 @@ const undoCheckIn = async (req, res) => {
 const getMyTickets = async (req, res) => {
   try {
     const checkIns = await CheckIn.find({
-      attendee: req.user.userId
+      attendee: req.auth.userId
     })
       .sort({ createdAt: -1 })
       .populate('event', 'title startDateTime endDateTime location imageUrl')
@@ -286,7 +310,7 @@ const getMyTickets = async (req, res) => {
       const qr = await qrService.generateQRCode({
         eventId: checkIn.event._id.toString(),
         orderId: checkIn.order._id.toString(),
-        attendeeId: req.user.userId,
+        attendeeId: req.auth.userId,
         ticketType: checkIn.ticketType
       });
       

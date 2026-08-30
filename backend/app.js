@@ -120,15 +120,27 @@ app.use(dosProtection);
 app.use(requestTimeout(30000)); // 30 second timeout
 app.use(memoryMonitor);
 
-// Body parsing with size limits
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing with size limits. Skips the Stripe webhook route: its raw
+// Buffer body (set above) must reach stripe.webhooks.constructEvent()
+// untouched for signature verification -- body-parser.json() does not skip
+// bodies a previous body-parser middleware already parsed, so without this
+// guard it silently replaces the Buffer with a parsed object and every
+// webhook delivery fails signature verification.
+const skipForStripeWebhook = (parser) => (req, res, next) => {
+  if (req.originalUrl === '/api/orders/webhook') return next();
+  return parser(req, res, next);
+};
+app.use(skipForStripeWebhook(bodyParser.json({ limit: '10mb' })));
+app.use(skipForStripeWebhook(bodyParser.urlencoded({ extended: true, limit: '10mb' })));
 app.use(cookieParser());
 
-// Input sanitization and validation
-app.use(sanitizeInput);
+// Input sanitization and validation. sanitizeInput and xssProtection both
+// reassign req.body (to sanitize string fields), which would clobber the
+// raw Buffer body Stripe webhook signature verification requires -- skip
+// them for that route, same reasoning as the body-parser guard above.
+app.use(skipForStripeWebhook(sanitizeInput));
 app.use(sqlInjectionProtection);
-app.use(xssProtection);
+app.use(skipForStripeWebhook(xssProtection));
 
 // CSRF protection for all routes
 app.use(generateCSRFToken);
