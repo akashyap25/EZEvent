@@ -4,7 +4,8 @@ const OrderSchema = new mongoose.Schema({
     stripeId: {
       type: String,
       required: false,
-      unique: false,
+      unique: true,
+      sparse: true,
     },
     totalAmount: {
       type: Number,

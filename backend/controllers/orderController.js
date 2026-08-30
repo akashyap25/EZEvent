@@ -37,18 +37,6 @@ const checkoutOrder = async (req, res) => {
   }
 };
 
-const createOrder = async (req, res) => {
-  try {
-    
-
-    const newOrder = await Order.create(req.body);
-    res.status(201).json({ success: true, order: newOrder });
-  } catch (error) {
-   
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
 const communicationConfig = require('../config/communicationConfig');
 const transporter = communicationConfig.getEmailTransporter();
 
@@ -68,33 +56,52 @@ const handleStripeWebhook = async (req, res) => {
 
       const eventData = await Event.findById(metadata.eventId);
 
+      // Atomic idempotent upsert keyed by stripeId: if this webhook is delivered
+      // more than once (Stripe's documented at-least-once delivery), the unique
+      // index on stripeId means only the first delivery creates a document --
+      // concurrent/duplicate deliveries hit a duplicate-key error, caught below,
+      // and are treated as already-processed rather than creating a second order.
+      let isNewOrder = true;
+      try {
+        await Order.create({
+          event: metadata.eventId,
+          buyer: metadata.buyerId,
+          totalAmount: session.amount_total / 100,
+          stripeId: session.id,
+          // checkout.session.completed means payment succeeded -- without this,
+          // the order was stuck at the schema's default 'pending' status forever,
+          // which meant ticket QR generation (requires status: 'completed') could
+          // never find a real paid order.
+          status: 'completed',
+        });
+      } catch (createError) {
+        if (createError.code === 11000) {
+          // Duplicate webhook delivery for the same Stripe session -- already processed.
+          isNewOrder = false;
+        } else {
+          throw createError;
+        }
+      }
 
-      // Check if the user is already registered for the event
-    const existingOrder = await Order.findOne({ buyer: metadata.buyerId, event: metadata.eventId });
-    if (existingOrder) {
-      // User is already registered for the event
-      return res.status(400).json({ success: false, message: 'You have already registered for this event.' });
-    }
+      if (isNewOrder) {
+        // Get buyer details
+        const buyer = await User.findById(metadata.buyerId);
 
-      // Create order with stripeId
-      await Order.create({
-        event: metadata.eventId,
-        buyer: metadata.buyerId,
-        totalAmount: session.amount_total / 100,
-        createdAt: new Date(),
-        stripeId: session.id, // Include stripeId here
-      });
-
-      // Get buyer details
-      const buyer = await User.findById(metadata.buyerId);
-
-      // Send email notification
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: buyer.email,
-        subject: 'Order Confirmation',
-        text: `Thank you for your purchase!\n\nEvent: ${eventData.title}\nAmount: ${session.amount_total / 100} INR\n\nYour order has been placed successfully.`,
-      });
+        // Send email notification. This is best-effort: a transient SMTP
+        // failure must not turn an otherwise-successful payment into a
+        // non-200 response, which would make Stripe retry a webhook whose
+        // order was already recorded (see idempotent upsert above).
+        try {
+          await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: buyer.email,
+            subject: 'Order Confirmation',
+            text: `Thank you for your purchase!\n\nEvent: ${eventData.title}\nAmount: ${session.amount_total / 100} INR\n\nYour order has been placed successfully.`,
+          });
+        } catch (emailError) {
+          console.error('Order confirmation email failed to send:', emailError);
+        }
+      }
 
       res.json({ received: true });
     } else {
@@ -174,7 +181,6 @@ const getOrdersByUser = async (req, res) => {
 
 module.exports = {
   checkoutOrder,
-  createOrder,
   getOrdersByEvent,
   getOrdersByUser,
   handleStripeWebhook,
